@@ -1,0 +1,75 @@
+.button-next-pair-mode {
+    border: none;
+    cursor: pointer;
+    background: none;
+}
+.button-next-pair-mode:hover{
+    opacity: 0.5;
+}
+.button-next-pair-mode img {
+    width: 25px;
+    height: 25px;
+}
+.pair-time{
+    padding-right:1%;
+    text-align: center;
+}
+.pair-all-info {
+    margin: 0 auto;
+    min-width: 50%;
+    max-width: fit-content;
+}
+.each-pair-section {
+    display: flex;
+    margin: 2% auto;
+    height: 100px;
+}
+.schedule-pair-buttons {
+    display: inline-block;
+    margin: 1% 1%;
+    padding: 1.5% 1.5%;
+    width: 44%;
+    text-align: center;
+}
+.left-up-schedule-pair-button{
+    border: 2px solid black;
+    border-top-left-radius: 10px;
+}
+.right-up-schedule-pair-button {
+    border: 2px solid black;
+    border-top-right-radius: 10px;
+}
+.left-down-schedule-pair-button {
+    border: 2px solid black;
+    border-bottom-left-radius: 10px;
+}
+.right-down-schedule-pair-button {
+    border: 2px solid black;
+    border-bottom-right-radius: 10px;
+}
+.schedule-two-buttons {
+    border: 2px solid black;
+    margin: 1% 1%;
+    padding: 1.5% 1.5%;
+    text-align: center;
+}
+.upper-button {
+    border: 2px solid black;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+.lower-button {
+    border: 2px solid black;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.schedule-one-button {
+    line-height: 50px;
+    height: 50%;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 1% 1%;
+    padding: 1.5% 1.5%;
+    text-align: center;
+    vertical-align: middle;
+}

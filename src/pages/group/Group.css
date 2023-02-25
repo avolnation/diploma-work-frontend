@@ -1,0 +1,14 @@
+#group-info{
+    margin-top: 1%;
+    padding: 0 1%;
+    display: flex;
+    /* width: 100%; */
+}
+#group-info-students-block{
+    background-color: lightgray;
+    width: 40%;
+}
+#group-info-now-and-recent-updates-block{
+    width: 60%;
+    background-color: lightgray;
+}
