@@ -7,12 +7,12 @@ import Modal from "../modal/Modal";
 const ScheduleDivider = () =>{
 
     // const [pairMode, setPairMode] = useState(0);
+
     const [pairModeByDays, setPairModeByDays] = useState([0, 0, 0, 0, 0, 0]);
     const [reloadPairModes, setReloadPairModes] = useState(false);
     const [weekParity, setWeekParity] = useState(2);
     const [subgroup, setSubgroup] = useState("0");
     const [showModal, setShowModal] = useState(false);
-    // const daysOfTheWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
     const pairTime = ["9:00 - 10:25", "10:40 - 12:05", "12:25 - 13:50", "14:20 - 15:45", "15:55 - 17:20", "17:30 - 18:55"]
 
     useEffect(() => {
@@ -57,7 +57,7 @@ const ScheduleDivider = () =>{
         if(pairMode == 0){
             return (
             <div style={{"minWidth": "70%", "height": "100px"}}>
-                <div className="schedule-one-button" id="0 2" onClick={(e) => infoToModal(e)}>Пара каждую неделю</div>
+                <div className="schedule-one-button" id="0 2" onClick={(e) => infoToModal(e)}>Каждую неделю</div>
             </div>)
         }
         if(pairMode == 1){

@@ -24,6 +24,32 @@
     margin: 2% auto;
     height: 100px;
 }
+.schedule-one-button {
+    line-height: 50px;
+    height: 50%;
+    border: 2px solid #c9c9c9;
+    border-radius: 10px;
+    margin: 1% 1%;
+    padding: 1.5% 1.5%;
+    text-align: center;
+    vertical-align: middle;
+}
+.schedule-one-button:hover{
+    color: #4096ff;
+    border: 2px solid #4096ff;
+    cursor: pointer;
+}
+.schedule-two-buttons {
+    border: 2px solid #c9c9c9;
+    margin: 1% 1%;
+    padding: 1.5% 1.5%;
+    text-align: center;
+}
+.schedule-two-buttons:hover{
+    color: #4096ff;
+    border: 2px solid #4096ff;
+    cursor: pointer;
+}
 .schedule-pair-buttons {
     display: inline-block;
     margin: 1% 1%;
@@ -32,44 +58,33 @@
     text-align: center;
 }
 .left-up-schedule-pair-button{
-    border: 2px solid black;
+    border: 2px solid #c9c9c9;
     border-top-left-radius: 10px;
 }
 .right-up-schedule-pair-button {
-    border: 2px solid black;
+    border: 2px solid #c9c9c9;
     border-top-right-radius: 10px;
 }
 .left-down-schedule-pair-button {
-    border: 2px solid black;
+    border: 2px solid #c9c9c9;
     border-bottom-left-radius: 10px;
 }
 .right-down-schedule-pair-button {
-    border: 2px solid black;
+    border: 2px solid #c9c9c9;
     border-bottom-right-radius: 10px;
 }
-.schedule-two-buttons {
-    border: 2px solid black;
-    margin: 1% 1%;
-    padding: 1.5% 1.5%;
-    text-align: center;
-}
 .upper-button {
-    border: 2px solid black;
+    border: 2px solid #c9c9c9;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
 }
 .lower-button {
-    border: 2px solid black;
+    border: 2px solid #c9c9c9;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
 }
-.schedule-one-button {
-    line-height: 50px;
-    height: 50%;
-    border: 2px solid black;
-    border-radius: 10px;
-    margin: 1% 1%;
-    padding: 1.5% 1.5%;
-    text-align: center;
-    vertical-align: middle;
+.schedule-pair-buttons:hover {
+    color: #4096ff;
+    border: 2px solid #4096ff;
+    cursor: pointer;
 }

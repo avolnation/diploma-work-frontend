@@ -1,0 +1,20 @@
+#day-choose-block {
+    vertical-align: top;
+}
+#day-choose-block-items{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 600px;
+}
+#day-choose-block-items span:hover {
+    color: #4096ff;
+    font-weight: bold;
+    /* border: 2px solid #4096ff; */
+    cursor: pointer;
+}
+.active-day-of-the-week {
+    color: blue;
+    font-weight: bold;
+}
+
