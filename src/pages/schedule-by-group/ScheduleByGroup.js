@@ -3,6 +3,7 @@ import "./ScheduleByGroup.css"
 
 import { useState } from "react";
 import ScheduleDivider from "./ScheduleDivider";
+import { Tabs } from "antd";
 
 const Groups = () =>{
 
@@ -19,18 +20,21 @@ const Groups = () =>{
             <span className="header-item">Мой профиль</span>
           </div>
           {/* <div style={{"display": "flex"}}> */}
-            <div id="day-choose-block" style={{"display": "inline-block", "width": "30%"}}>
-              {/* <span>Выбор дня недели</span> */}
-              <div id="day-choose-block-items" style={{"display": "flex"}}>
-                {daysOfTheWeek.map(el => {
-                  return (<span class={ selectedDayOfTheWeek == el ? "active-day-of-the-week" : ""} style={{"display": "block"}} onClick={() => setSelectedDayOfTheWeek(el)}>
-                    {el}
-                  </span>)
+            <div id="day-choose-block" style={{"display": "inline-block", "width": "30%", "height": "500px"}}>
+              <Tabs
+                size="large"
+                tabPosition="left"
+                items={daysOfTheWeek.map(el => {
+                  return {
+                    label: `${el}`, 
+                    key: el,
+                    children: <ScheduleDivider selectedDay={selectedDayOfTheWeek} daysOfTheWeek={daysOfTheWeek}/>}
                 })}
-              </div>
+              />
+
             </div>
             <div id="schedule-by-group" style={{"display": "inline-block", "width": "70%"}}>
-              <ScheduleDivider selectedDay={selectedDayOfTheWeek}/>
+              
             </div>
           {/* </div> */}
           

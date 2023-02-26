@@ -1,12 +1,12 @@
 import "../../App.css"
 import "./ScheduleDivider.css"
 
+import { ClockCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
+import { Tag, Icon, Divider } from "antd"
 import Modal from "../modal/Modal";
 
-const ScheduleDivider = () =>{
-
-    // const [pairMode, setPairMode] = useState(0);
+const ScheduleDivider = (props) =>{
 
     const [pairModeByDays, setPairModeByDays] = useState([0, 0, 0, 0, 0, 0]);
     const [reloadPairModes, setReloadPairModes] = useState(false);
@@ -88,17 +88,22 @@ const ScheduleDivider = () =>{
                     return (
                         <>  
                             <div className="each-pair-section">
-                                <span className="pair-time">{pairTime[index]}</span>
+                            <Tag icon color="#4096ff">
+                                {index + 1}
+                            </Tag>
+                            <Tag icon={<ClockCircleOutlined />} color="default">
+                                {pairTime[index]}
+                            </Tag>
+                            <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
                                 {pairModeView(el)}
-                                <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><img src="./next-pair-mode.svg"/></button>
+                                
                             </div>
-                            
+                            <Divider />
                         </>
                     )
                 })
             }
-            
-            <Modal subgroup={subgroup} weekParity={weekParity} show={showModal} modalHandleOk={modalHandleOk} modalHandleCancel={modalHandleCancel}/>
+            <Modal subgroup={subgroup} weekParity={weekParity} show={showModal} modalHandleOk={modalHandleOk} modalHandleCancel={modalHandleCancel} daysOfTheWeek={props.daysOfTheWeek}/>
         </div>
     );
   }

@@ -1,4 +1,5 @@
 .button-next-pair-mode {
+    display: inline-block;
     border: none;
     cursor: pointer;
     background: none;
@@ -6,23 +7,25 @@
 .button-next-pair-mode:hover{
     opacity: 0.5;
 }
-.button-next-pair-mode img {
-    width: 25px;
-    height: 25px;
-}
+/* .button-next-pair-mode img {
+    width: 15px;
+    height: 15px;
+} */
 .pair-time{
     padding-right:1%;
     text-align: center;
 }
 .pair-all-info {
     margin: 0 auto;
-    min-width: 50%;
+    min-width: 100%;
     max-width: fit-content;
 }
 .each-pair-section {
-    display: flex;
-    margin: 2% auto;
+    /* display: flex; */
+    display: inline-block;
+    margin: 2% 0;
     height: 100px;
+    width: 80%;
 }
 .schedule-one-button {
     line-height: 50px;
@@ -87,4 +90,7 @@
     color: #4096ff;
     border: 2px solid #4096ff;
     cursor: pointer;
+}
+.ant-tabs-tabpane {
+    width: 1000px;
 }

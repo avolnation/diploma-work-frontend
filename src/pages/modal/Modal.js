@@ -26,7 +26,7 @@ const ModalWindow = (props) => {
             <>
             <Form>
                 <Form.Item>
-                    <Input placeholder='День недели(тут будет Select)'></Input>
+                    <Input placeholder='День недели(залоченный select)'></Input>
                 </Form.Item>
                 <Form.Item>
                     <Radio.Group value={checkedWeek}>
@@ -36,7 +36,7 @@ const ModalWindow = (props) => {
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item>
-                    <Input placeholder='Группа(тут тоже Select)'></Input>
+                    <Input placeholder='Группа(тут тоже залоченный Select)'></Input>
                 </Form.Item>
                 <Form.Item>
                     <Input placeholder='И тут Select'></Input>
