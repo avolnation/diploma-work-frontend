@@ -1,7 +1,7 @@
 import "../../App.css"
 import "./ScheduleByGroup.css"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ScheduleDivider from "./ScheduleDivider";
 import { Tabs } from "antd";
 
@@ -10,6 +10,23 @@ const Groups = () =>{
     // const [modal, setModal] = useState('');
     const daysOfTheWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота']
     const [ selectedDayOfTheWeek, setSelectedDayOfTheWeek ] = useState('Понедельник')
+    const [ activeTab, setActiveTab] = useState('Понедельник')
+
+    useEffect(() => {
+      console.log(activeTab)
+    }, [])
+
+    const onTabChange = (key) => {
+      setActiveTab(key);
+      switch(key){
+        case 'Понедельник': 
+        case 'Вторник': 
+        case 'Среда': 
+        case 'Четверг': 
+        case 'Пятница': 
+        case 'Суббота': 
+      }
+    } 
 
     return (
       <div className="App">
@@ -24,17 +41,20 @@ const Groups = () =>{
               <Tabs
                 size="large"
                 tabPosition="left"
-                items={daysOfTheWeek.map(el => {
-                  return {
-                    label: `${el}`, 
-                    key: el,
-                    children: <ScheduleDivider selectedDay={selectedDayOfTheWeek} daysOfTheWeek={daysOfTheWeek}/>}
-                })}
+                activeKey={activeTab}
+                onChange={onTabChange}
+                defaultActiveKey="Понедельник"
+                items={[{
+                  key: 'Понедельник', 
+                  label: 'Понедельник',
+                  children: 
+                  <>
+                    <ScheduleDivider selectedDay={selectedDayOfTheWeek} daysOfTheWeek={daysOfTheWeek}/>
+                  </>
+                }
+                ]}
               />
 
-            </div>
-            <div id="schedule-by-group" style={{"display": "inline-block", "width": "70%"}}>
-              
             </div>
           {/* </div> */}
           

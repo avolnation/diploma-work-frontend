@@ -1,10 +1,45 @@
-import { Button, Modal, Input, Form, Radio } from 'antd';
+import { Button, Modal, Input, Form, Radio, Select } from 'antd';
 import { useEffect, useState } from 'react';
 const ModalWindow = (props) => {
+
+    const API_URL = 'http://localhost:3002'
 
     const [checkedWeek, setCheckedWeek] = useState("");
     const [checkedSubgroup, setCheckedSubgroup] = useState("");
     const [loading, setLoading] = useState(true);
+
+    const [ groups, setGroups ] = useState([])
+
+    const daysOfTheWeek =  [{value: 'Понедельник', title: 'Понедельник'}, {value: 'Вторник', title: 'Вторник'}, {value: 'Среда', title: 'Среда'}, 
+    {value: 'Четверг', title: 'Четверг'}, {value: 'Пятница', title: 'Пятница'}, {value: 'Суббота', title: 'Суббота'}]
+    
+
+    const apiFetch = (req) => {
+        switch(req){
+            case 'get-all-groups': 
+            fetch(API_URL + "/groups/get-all-groups")
+            .then(result => result.json())
+            .then(result => {
+                // console.log(result)result.groups
+                let groupsToSet = result.groups.map(el => {
+                    return {
+                        value: el._id,
+                        label: el.title
+                    }
+                })
+                setGroups(groupsToSet);
+            })
+            .catch(err => {
+                console.log(err);
+                
+            })
+            break;
+        }
+    }
+
+    useEffect(() => {
+        apiFetch('get-all-groups');
+    }, [])
 
     useEffect(() => {
         // console.log(props.subgroup + props.weekParity)
@@ -17,6 +52,9 @@ const ModalWindow = (props) => {
         setCheckedWeek(props.weekParity);
         setLoading(false);
     }, [props.weekParity])
+
+
+
     
   return (
     <>
@@ -26,7 +64,7 @@ const ModalWindow = (props) => {
             <>
             <Form>
                 <Form.Item>
-                    <Input placeholder='День недели(залоченный select)'></Input>
+                    <Select defaultValue={props.selectedDay} options={daysOfTheWeek} disabled/>
                 </Form.Item>
                 <Form.Item>
                     <Radio.Group value={checkedWeek}>
@@ -36,10 +74,10 @@ const ModalWindow = (props) => {
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item>
-                    <Input placeholder='Группа(тут тоже залоченный Select)'></Input>
+                    <Select options={groups}/>
                 </Form.Item>
                 <Form.Item>
-                    <Input placeholder='И тут Select'></Input>
+                    <Input placeholder='И тут Select(пары)'></Input>
                 </Form.Item>
                 <Form.Item>
                     <Radio.Group value={checkedSubgroup}>
