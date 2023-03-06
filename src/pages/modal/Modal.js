@@ -4,11 +4,14 @@ const ModalWindow = (props) => {
 
     const API_URL = 'http://localhost:3002'
 
+    const [groupId, setGroupId] = useState("63e4cdbc826646321ed69199");
+
     const [checkedWeek, setCheckedWeek] = useState("");
     const [checkedSubgroup, setCheckedSubgroup] = useState("");
     const [loading, setLoading] = useState(true);
 
     const [ groups, setGroups ] = useState([])
+    const [ subjects, setSubjects ] = useState([])
 
     const daysOfTheWeek =  [{value: 'Понедельник', title: 'Понедельник'}, {value: 'Вторник', title: 'Вторник'}, {value: 'Среда', title: 'Среда'}, 
     {value: 'Четверг', title: 'Четверг'}, {value: 'Пятница', title: 'Пятница'}, {value: 'Суббота', title: 'Суббота'}]
@@ -34,11 +37,24 @@ const ModalWindow = (props) => {
                 
             })
             break;
+            case 'get-subjects-by-group-id':
+                fetch(API_URL + "/subjects/get-subjects-by-group/" + groupId)
+                .then(result => result.json())
+                .then(result => {
+                    let subjectsToSet = result.subjects.map(el => {
+                        return {
+                            value: el._id,
+                            label: `${el.title} (${el.abbreviature})`
+                        }
+                    })
+                    setSubjects(subjectsToSet);
+                })
         }
     }
 
     useEffect(() => {
         apiFetch('get-all-groups');
+        apiFetch('get-subjects-by-group-id');
     }, [])
 
     useEffect(() => {
@@ -58,7 +74,7 @@ const ModalWindow = (props) => {
     
   return (
     <>
-      <Modal title="Basic Modal" open={props.show} onOk={props.modalHandleOk} onCancel={props.modalHandleCancel}>
+      <Modal title="Новая пара" open={props.show} onOk={props.modalHandleOk} onCancel={props.modalHandleCancel}>
             {loading ? 
             <span>Loading...</span> : 
             <>
@@ -77,7 +93,7 @@ const ModalWindow = (props) => {
                     <Select options={groups}/>
                 </Form.Item>
                 <Form.Item>
-                    <Input placeholder='И тут Select(пары)'></Input>
+                    <Select options={subjects}/>
                 </Form.Item>
                 <Form.Item>
                     <Radio.Group value={checkedSubgroup}>

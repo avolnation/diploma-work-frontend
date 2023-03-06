@@ -10,8 +10,15 @@ const ScheduleDivider = (props) =>{
 
     const API_URL = "http://localhost:3002"
 
-    const [ allPairsByDay, setAllPairsByDay ] = useState([])
-    const [ pairModeByDays, setPairModeByDays ] = useState([{"pairMode": 0, "additionalInfo": {}}, {"pairMode": 0, "additionalInfo": {}}, {"pairMode": 0, "additionalInfo": {}}, {"pairMode": 0, "additionalInfo": {}}, {"pairMode": 0, "additionalInfo": {}}, {"pairMode": 0, "additionalInfo": {}}]);
+    const [ allPairsByDay, setAllPairsByDay ] = useState([]);
+
+    const [ pairModeByDays, setPairModeByDays ] = useState([{"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
+                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
+                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
+                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
+                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
+                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}]);
+
     const [ reloadPairModes, setReloadPairModes ] = useState(false);
     // const [ loadingPairsFromApi, setLoadingPairsFromApi ] = useState(true);
     const [ weekParity, setWeekParity ] = useState(2);
@@ -117,7 +124,7 @@ const ScheduleDivider = (props) =>{
                 { el.additionalInfo["0 2"] ? 
                     
                         <div style={{"minWidth": "70%", "height": "100px"}}>
-                            <div className="schedule-one-button" id="0 2" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 2"].subject}</div>
+                            <div className="schedule-one-button" id="0 2" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 2"].subject[0].abbreviature }</div>
                         </div>
                     :
                     <div style={{"minWidth": "70%", "height": "100px"}}>
@@ -133,14 +140,14 @@ const ScheduleDivider = (props) =>{
                 {
                     el.additionalInfo["0 1"] 
                     ?
-                    <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 1"].subject}</div> 
+                    <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 1"].subject[0].abbreviature   }</div> 
                     :
                     <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToModal(e)}>Над чертой</div>
                 }
                 {
                     el.additionalInfo["0 0"] 
                     ?
-                    <div className="schedule-two-buttons upper-button" id="0 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 0"].subject}</div> 
+                    <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 0"].subject[0].abbreviature   }</div> 
                     :
                     <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToModal(e)}>Под чертой</div>
                 }
@@ -154,14 +161,14 @@ const ScheduleDivider = (props) =>{
                     {
                         el.additionalInfo["1 1"] 
                         ?
-                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["1 1"].subject}</div> 
+                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["1 1"].subject[0].abbreviature  }</div> 
                         :
                         <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToModal(e)}>Над чертой | Первая подгруппа</div>
                     }
                     {
                         el.additionalInfo["2 1"] 
                         ?
-                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["2 1"].subject}</div> 
+                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["2 1"].subject[0].abbreviature }</div> 
                         :
                         <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToModal(e)}>Над чертой | Вторая подгруппа</div>
                     }
@@ -170,14 +177,14 @@ const ScheduleDivider = (props) =>{
                     {
                         el.additionalInfo["1 0"] 
                         ?
-                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["1 0"].subject}</div> 
+                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["1 0"].subject[0].abbreviature    }</div> 
                         :
                         <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToModal(e)}>Под чертой | Первая подгруппа</div>
                     }
                     {
                         el.additionalInfo["2 0"] 
                         ?
-                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["2 0"].subject}</div> 
+                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["2 0"].subject[0].abbreviature   }</div> 
                         :
                         <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToModal(e)}>Под чертой | Вторая подгруппа</div>
                     }
@@ -202,7 +209,10 @@ const ScheduleDivider = (props) =>{
                                 {pairTime[index]}
                             </Tag>
                         </Tooltip>
-                        <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                        {
+                            <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                        }
+                        
                             {pairModeView(el)} 
                         </div>
                         <Divider />
