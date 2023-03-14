@@ -3,37 +3,25 @@ import "./ScheduleDivider.css"
 
 import { ClockCircleOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
-import { Tag, Icon, Divider, Tooltip } from "antd"
+import { useSelector, useDispatch } from 'react-redux';
+import { Tag, Icon, Divider, Tooltip, Spin } from "antd";
 import Modal from "../modal/Modal";
+import { setLoadingSubjects, setGroupForSubjects, fetchSubjectsFromApiSucceed, fetchSubjectsFromApiFailed } from '../../redux/reducers/subjectsByGroupSlice';
 
 const ScheduleDivider = (props) =>{
 
     const API_URL = "http://localhost:3002"
-
-    const [ allPairsByDay, setAllPairsByDay ] = useState([]);
-
-    const [ pairModeByDays, setPairModeByDays ] = useState([{"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
-                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
-                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
-                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
-                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}, 
-                                                            {"pairMode": 0, "additionalInfo": {}, "lockedRefreshButton": false}]);
+    
+    const subjectsFromRedux = useSelector(state => state.subjects);
+    const dispatch = useDispatch();
 
     const [ reloadPairModes, setReloadPairModes ] = useState(false);
-    // const [ loadingPairsFromApi, setLoadingPairsFromApi ] = useState(true);
     const [ weekParity, setWeekParity ] = useState(2);
     const [ subgroup, setSubgroup ] = useState("0");
     const [ showModal, setShowModal ] = useState(false);
     
     const pairTime = ["9:00 - 10:25", "10:40 - 12:05", "12:25 - 13:50", "14:20 - 15:45", "15:55 - 17:20", "17:30 - 18:55"]
 
-    useEffect(() => {
-        apiFetch('get-schedule-by-day-and-group');
-    }, [])
-
-    useEffect(() => {
-        // setReloadPairModes(false);
-    }, [])
     
     
     const modalHandleOk = () => {
@@ -44,71 +32,6 @@ const ScheduleDivider = (props) =>{
         setShowModal(false);
         // setWeekParity(null)
     };
-
-    const apiFetch = (req) => {
-        switch(req){
-            case 'get-schedule-by-day-and-group': 
-                fetch(API_URL + "/schedule/get-schedule-by-day-and-group?day=Понедельник&group=63e4cdbc826646321ed69199")
-                .then(result => result.json())
-                .then(result => {
-                    setAllPairsByDay(result.schedule);
-
-                    //Добавляем в объект pairModeByDays в поле additionalInfo свойства с ID пар (например 1 0, т.е вида subgroup weekParity)
-                    let tempPairModeByDays = pairModeByDays;
-                    let tempScheduleObject = {};
-                    let tempPairMode = 0;
-                    
-                    result.schedule.forEach((el, index) => {
-                        tempScheduleObject = {};
-                        el.items.forEach(el => {
-                            tempScheduleObject[el.subgroup + " " + el.weekParity] = {
-                                "classroom": el.classroom,
-                                "subject": el.subject
-                            }
-                            if((el.subgroup == 1 || el.subgroup == 2) && (el.weekParity == 0 || el.weekParity == 1)){
-                                tempPairMode = 2;
-                            }
-                            if((el.subgroup == 0) && (el.weekParity == 1 || el.weekParity == 2)){
-                                tempPairMode = 1;
-                            }
-                            if(el.subgroup == 0 && el.weekParity == 2){
-                                tempPairMode = 0;
-                            }
-                        }) 
-                        tempPairModeByDays[index].additionalInfo = tempScheduleObject;
-                        tempPairModeByDays[index].pairMode = tempPairMode;
-                    });
-
-                    setPairModeByDays(tempPairModeByDays)
-                    return result
-                })
-                .then((result) => {
-                    console.log(pairModeByDays)
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-            break;
-        }
-    }
-
-    const switchPairMode = (e, pairNumber) => {
-        let pairModeByDaysTemp = pairModeByDays;
-        console.log(pairModeByDays)
-        let nextPairModeByDaysTemp = pairModeByDaysTemp[pairNumber].pairMode + 1;
-        console.log(nextPairModeByDaysTemp)
-        
-        pairModeByDaysTemp[pairNumber].pairMode++
-
-        if(nextPairModeByDaysTemp == 3){
-            pairModeByDaysTemp[pairNumber].pairMode = 0;
-            setPairModeByDays(pairModeByDaysTemp);
-        }
-        else{
-            setPairModeByDays(pairModeByDaysTemp);
-        }
-        
-    }
 
     const infoToModal = (event) => {
         const weekParityAndSubgroup = event.target.id.split(" ");
@@ -195,7 +118,11 @@ const ScheduleDivider = (props) =>{
     
     const renderPairsModeByDays = () => {
         return (
-            pairModeByDays.map((el, index) => {
+            subjectsFromRedux.loading 
+            ? 
+            <Spin/> 
+            :
+            props.pairModeByDays.map((el, index) => {
                 return (
                     <>  
                         <div className="each-pair-section">
@@ -210,7 +137,7 @@ const ScheduleDivider = (props) =>{
                             </Tag>
                         </Tooltip>
                         {
-                            <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                            <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
                         }
                         
                             {pairModeView(el)} 

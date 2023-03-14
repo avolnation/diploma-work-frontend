@@ -1,5 +1,8 @@
 import { Button, Modal, Input, Form, Radio, Select } from 'antd';
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoadingSubjects, setGroupForSubjects, fetchSubjectsFromApiSucceed, fetchSubjectsFromApiFailed } from '../../redux/reducers/subjectsByGroupSlice';
+import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed } from '../../redux/reducers/groupsSlice';
 const ModalWindow = (props) => {
 
     const API_URL = 'http://localhost:3002'
@@ -10,8 +13,13 @@ const ModalWindow = (props) => {
     const [checkedSubgroup, setCheckedSubgroup] = useState("");
     const [loading, setLoading] = useState(true);
 
-    const [ groups, setGroups ] = useState([])
+    // const [ groups, setGroups ] = useState([])
     const [ subjects, setSubjects ] = useState([])
+
+    //! TEST
+    const groupsFromRedux = useSelector(state => state.groups)
+    const subjectsFromRedux = useSelector(state => state.subjects)
+    const dispatch = useDispatch()
 
     const daysOfTheWeek =  [{value: 'Понедельник', title: 'Понедельник'}, {value: 'Вторник', title: 'Вторник'}, {value: 'Среда', title: 'Среда'}, 
     {value: 'Четверг', title: 'Четверг'}, {value: 'Пятница', title: 'Пятница'}, {value: 'Суббота', title: 'Суббота'}]
@@ -23,14 +31,14 @@ const ModalWindow = (props) => {
             fetch(API_URL + "/groups/get-all-groups")
             .then(result => result.json())
             .then(result => {
-                // console.log(result)result.groups
                 let groupsToSet = result.groups.map(el => {
                     return {
                         value: el._id,
                         label: el.title
                     }
                 })
-                setGroups(groupsToSet);
+                dispatch(fetchGroupsFromApiSucceed(groupsToSet));
+                // setGroups(groupsToSet);
             })
             .catch(err => {
                 console.log(err);
@@ -47,7 +55,8 @@ const ModalWindow = (props) => {
                             label: `${el.title} (${el.abbreviature})`
                         }
                     })
-                    setSubjects(subjectsToSet);
+                    dispatch(fetchSubjectsFromApiSucceed(subjectsToSet));
+                    // setSubjects(subjectsToSet);
                 })
         }
     }
@@ -55,6 +64,11 @@ const ModalWindow = (props) => {
     useEffect(() => {
         apiFetch('get-all-groups');
         apiFetch('get-subjects-by-group-id');
+    }, [])
+
+    useEffect(() => {
+        // dispatch(setGroupForSubjects("63e4cdbc826646321ed69199"))
+        // console.log(subjectsFromRedux.group)
     }, [])
 
     useEffect(() => {
@@ -90,10 +104,10 @@ const ModalWindow = (props) => {
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item>
-                    <Select options={groups}/>
+                    <Select options={groupsFromRedux.groups}/>
                 </Form.Item>
                 <Form.Item>
-                    <Select options={subjects}/>
+                    <Select options={subjectsFromRedux.subjects}/>
                 </Form.Item>
                 <Form.Item>
                     <Radio.Group value={checkedSubgroup}>

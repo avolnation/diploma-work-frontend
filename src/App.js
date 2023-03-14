@@ -16,8 +16,8 @@ const App = () => {
   return (
     <BrowserRouter>
         <Switch>
-          <Route path="/schedule-by-group">
-            <ScheduleByGroup/>
+          <Route path="/schedule-by-group/:groupId" component={ScheduleByGroup}>
+            {/* <ScheduleByGroup/> */}
           </Route>
           <Route path="/last-activities">
             <RecentActivities/>
