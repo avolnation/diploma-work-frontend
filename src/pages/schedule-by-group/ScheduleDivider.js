@@ -1,61 +1,130 @@
 import "../../App.css"
 import "./ScheduleDivider.css"
 
-import { ClockCircleOutlined, ReloadOutlined } from '@ant-design/icons';
-import { useEffect, useState } from "react";
+import { ClockCircleOutlined, ReloadOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useEffect, useState, useForm } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Tag, Icon, Divider, Tooltip, Spin } from "antd";
-import Modal from "../modal/Modal";
-import { setLoadingSubjects, setGroupForSubjects, fetchSubjectsFromApiSucceed, fetchSubjectsFromApiFailed } from '../../redux/reducers/subjectsByGroupSlice';
+import { Popconfirm, Menu, Space, Tag, Icon, Divider, Tooltip, Spin, Button, Modal, Input, Form, Radio, Select, Tabs, Skeleton, Dropdown } from "antd";
+import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed } from '../../redux/reducers/groupsSlice';
 
-const ScheduleDivider = (props) =>{
+const ScheduleDivider = (props) => {
 
-    const API_URL = "http://localhost:3002"
+    const REPLACE_FLAG = true;
+
+    const pairMenu = [
+        {
+            key: 1, 
+            label: (
+                    <span>
+                        Редактировать
+                    </span> 
+            ),
+            icon: <EditOutlined/> },
+        {
+            key: 2, 
+            label: (
+                <Popconfirm placement="topRight" onConfirm title={`Вы действительно хотите удалить «»?`} okText="Да" cancelText="Нет">
+                    Удалить
+                </Popconfirm> 
+            ),
+            icon: <DeleteOutlined/>,
+            danger: true}
+    ];
     
     const subjectsFromRedux = useSelector(state => state.subjects);
-    const dispatch = useDispatch();
+    const groupsFromRedux = useSelector(state => state.groups)
+    const dispatch = useDispatch()
+
+    const [ loading, setLoading ] = useState(true);
+    const [ newScheduleForm ] = Form.useForm();
 
     const [ reloadPairModes, setReloadPairModes ] = useState(false);
-    const [ weekParity, setWeekParity ] = useState(2);
-    const [ subgroup, setSubgroup ] = useState("0");
     const [ showModal, setShowModal ] = useState(false);
-    
-    const pairTime = ["9:00 - 10:25", "10:40 - 12:05", "12:25 - 13:50", "14:20 - 15:45", "15:55 - 17:20", "17:30 - 18:55"]
+    const [ showExistingPairModal, setShowExistingPairModal ] = useState(false);
+    const [ pairNumber, setPairNumber ] = useState("1");
 
-    
-    
-    const modalHandleOk = () => {
-        setShowModal(false);
-    };
+    const [ pairWarningMessage, setPairWarningMessage ] = useState('');
 
+    const pairTime = ["9:00 - 10:25", "10:40 - 12:05", "12:25 - 13:50", "14:20 - 15:45", "15:55 - 17:20", "17:30 - 18:55"]    
+
+    // Функция для закрытия модального окна и очистки полей в форме
     const modalHandleCancel = () => {
         setShowModal(false);
-        // setWeekParity(null)
+        newScheduleForm.resetFields()
     };
 
-    const infoToModal = (event) => {
-        const weekParityAndSubgroup = event.target.id.split(" ");
-        setSubgroup(weekParityAndSubgroup[0]);
-        setWeekParity(weekParityAndSubgroup[1]);
-        setShowModal(true)
+    const existingPairModalCancel = () => {
+        setShowExistingPairModal(false);
     }
 
-    const pairModeView = (el) => {
+    // Функция передачи информации в модальное окно
+    const infoToNewPairModal = async (event, idx) => {
+        setPairNumber(idx + 1);
+        const weekParityAndSubgroup = event.target.id.split(" ");
+        newScheduleForm.setFieldsValue({"weekParity": weekParityAndSubgroup[1], "subgroup": weekParityAndSubgroup[0], group: props.groupId});
+        setLoading(false);
+        setShowModal(true);
+    }
+
+    // 
+    const newPairHandler = (flag) => {
+
+        const formData = new FormData();
+    
+        console.log(newScheduleForm.getFieldsValue())
+      
+        formData.append('dayOfTheWeek', props.selectedDay);
+        formData.append('weekParity', +newScheduleForm.getFieldValue("weekParity"));
+        formData.append('group', newScheduleForm.getFieldValue("group"));
+        formData.append('subject', newScheduleForm.getFieldValue("subject"));
+        formData.append('subgroup', +newScheduleForm.getFieldValue("subgroup"));
+        formData.append('pairNumber', pairNumber);
+
+        // console.log(e);
+        if(flag){
+            formData.append('replace_flag', true)
+        }
+    
+        const data = JSON.stringify(Object.fromEntries(formData))
+      
+        fetch("http://localhost:3002/" + 'schedule/new-schedule', 
+        {method: 'POST', 
+        body: data, headers: {'Content-Type':'application/json'}})
+        .then(res => {
+            return res.json()
+        })
+        .then(res => {
+            if(res.status == 'warning'){
+                setShowExistingPairModal(true);
+                setPairWarningMessage(res.message);
+            }
+            else {
+                newScheduleForm.resetFields();
+                modalHandleCancel();
+            }
+        })
+        // .then(() => {
+        //     newScheduleForm.resetFields();
+        //     // props.modalHandleCancel();
+        // })
+      }
+
+    const pairModeView = (el, index) => {
         if(el.pairMode == 0){
             return (
                 <>
                 { el.additionalInfo["0 2"] ? 
-                    
-                        <div style={{"minWidth": "70%", "height": "100px"}}>
-                            <div className="schedule-one-button" id="0 2" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 2"].subject[0].abbreviature }</div>
-                        </div>
+                    <Dropdown menu={{items: pairMenu, }} trigger={['contextMenu']}>
+                            <div style={{"minWidth": "70%", "height": "100px"}}>
+                                <div className="schedule-one-button" id="0 2" >{el.additionalInfo["0 2"].subject[0].abbreviature}</div>
+                            </div>
+                    </Dropdown>
                     :
                     <div style={{"minWidth": "70%", "height": "100px"}}>
-                        <div className="schedule-one-button" id="0 2" onClick={(e) => infoToModal(e)}>Каждую неделю</div>
+                        <div className="schedule-one-button" id="0 2" onClick={(e) => infoToNewPairModal(e, index)}>Каждую неделю</div>
                     </div>
                 }
                 </>
-            
             )
         }
         if(el.pairMode == 1){
@@ -63,16 +132,16 @@ const ScheduleDivider = (props) =>{
                 {
                     el.additionalInfo["0 1"] 
                     ?
-                    <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 1"].subject[0].abbreviature   }</div> 
+                    <div className="schedule-two-buttons upper-button" id="0 1" >{el.additionalInfo["0 1"].subject[0].abbreviature}</div> 
                     :
-                    <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToModal(e)}>Над чертой</div>
+                    <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой</div>
                 }
                 {
                     el.additionalInfo["0 0"] 
                     ?
-                    <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["0 0"].subject[0].abbreviature   }</div> 
+                    <div className="schedule-two-buttons lower-button" id="0 0" >{el.additionalInfo["0 0"].subject[0].abbreviature}</div> 
                     :
-                    <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToModal(e)}>Под чертой</div>
+                    <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой</div>
                 }
                  
             </div>)
@@ -84,79 +153,119 @@ const ScheduleDivider = (props) =>{
                     {
                         el.additionalInfo["1 1"] 
                         ?
-                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["1 1"].subject[0].abbreviature  }</div> 
+                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" >{el.additionalInfo["1 1"].subject[0].abbreviature}</div> 
                         :
-                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToModal(e)}>Над чертой | Первая подгруппа</div>
+                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой | Первая подгруппа</div>
                     }
                     {
                         el.additionalInfo["2 1"] 
                         ?
-                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToModal(e)}>{el.additionalInfo["2 1"].subject[0].abbreviature }</div> 
+                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" >{el.additionalInfo["2 1"].subject[0].abbreviature}</div> 
                         :
-                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToModal(e)}>Над чертой | Вторая подгруппа</div>
+                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой | Вторая подгруппа</div>
                     }
                     </div>
                     <div>
                     {
                         el.additionalInfo["1 0"] 
                         ?
-                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["1 0"].subject[0].abbreviature    }</div> 
+                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" >{el.additionalInfo["1 0"].subject[0].abbreviature}</div> 
                         :
-                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToModal(e)}>Под чертой | Первая подгруппа</div>
+                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой | Первая подгруппа</div>
                     }
                     {
                         el.additionalInfo["2 0"] 
                         ?
-                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToModal(e)}>{el.additionalInfo["2 0"].subject[0].abbreviature   }</div> 
+                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" >{el.additionalInfo["2 0"].subject[0].abbreviature}</div> 
                         :
-                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToModal(e)}>Под чертой | Вторая подгруппа</div>
+                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой | Вторая подгруппа</div>
                     }
                     </div>
             </div>)
         }
     }
     
-    const renderPairsModeByDays = () => {
-        return (
-            subjectsFromRedux.loading 
-            ? 
-            <Spin/> 
-            :
-            props.pairModeByDays.map((el, index) => {
-                return (
-                    <>  
-                        <div className="each-pair-section">
-                        <Tooltip title="Номер пары">
-                            <Tag icon color="#4096ff" style={{"marginLeft": "10px"}}>
-                                {index + 1}
-                            </Tag>
-                        </Tooltip>
-                        <Tooltip title="Время пары">
-                            <Tag icon={<ClockCircleOutlined />} color="default">
-                                {pairTime[index]}
-                            </Tag>
-                        </Tooltip>
-                        {
-                            <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
-                        }
-                        
-                            {pairModeView(el)} 
-                        </div>
-                        <Divider />
-                    </>
-                )
-            })
-        )
-    }
-
     return (
-        <div className="pair-all-info">
+        <>
+            <div className="pair-all-info">
             {/* { loadingPairsFromApi ? <span> Loading...</span> : */}
             {
-                renderPairsModeByDays()
+                subjectsFromRedux.loading ? 
+                <Spin/>
+                :
+                props.pairModeByDays.map((el, index) => {
+                    return (
+                        <>  
+                            <div className="each-pair-section">
+                            <Tooltip title="Номер пары">
+                                <Tag icon color="#4096ff" style={{"marginLeft": "10px"}}>
+                                    {index + 1}
+                                </Tag>
+                            </Tooltip>
+                            <Tooltip title="Время пары">
+                                <Tag icon={<ClockCircleOutlined />} color="default">
+                                    {pairTime[index]}
+                                </Tag>
+                            </Tooltip>
+                            {
+                                Object.keys(el.additionalInfo).length >= 1 ? 
+                                <Tooltip title="Внимание! При обновлении и редактировании уже созданные пары удалятся">
+                                    <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                                </Tooltip> 
+                                :
+                                <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                            }
+                                {pairModeView(el, index)} 
+                            </div>
+                            <Divider />
+                        </>
+                    )
+                })
             }
-            <Modal subgroup={subgroup} weekParity={weekParity} show={showModal} modalHandleOk={modalHandleOk} modalHandleCancel={modalHandleCancel} selectedDay={props.selectedDay}/>
-        </div>
+            </div>
+            <Modal title="Новая пара" open={showModal} onCancel={modalHandleCancel} footer={false}>
+                {loading ? 
+                <Skeleton/> : 
+                <>
+                <Form style={{"marginTop": "5%"}} form={newScheduleForm} onFinish={() => newPairHandler()}>
+                    <Form.Item name="dayOfTheWeek">
+                        <Select defaultValue={props.selectedDay} options={props.daysOfTheWeek} disabled/>
+                    </Form.Item>
+                    <Form.Item name="weekParity">
+                        <Radio.Group>
+                            <Radio.Button value={"2"}>Каждую неделю</Radio.Button>
+                            <Radio.Button value={"1"}>Над чертой</Radio.Button>
+                            <Radio.Button value={"0"}>Под чертой</Radio.Button>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item name="group" rules={[{required: true, message: "Пожалуйста, выберите группу!"}]}>
+                        <Select options={groupsFromRedux?.groups}/>
+                    </Form.Item>
+                    <Form.Item name="subject" rules={[{required: true, message: "Пожалуйста, выберите предмет!"}]}>
+                        <Select options={subjectsFromRedux?.allSubjects}/>
+                    </Form.Item>
+                    <Form.Item name="subgroup" labelCol={{span: 4}}>
+                        <Radio.Group>
+                            <Radio.Button value={"0"}>Общая</Radio.Button>
+                            <Radio.Button value={"1"}>Первая</Radio.Button>
+                            <Radio.Button value={"2"}>Вторая</Radio.Button>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button id="submit" type="primary" htmlType="submit">Сохранить</Button>
+                    </Form.Item>
+                </Form>
+                </>
+                }  
+            </Modal>
+            <Modal title="Внимание!" open={showExistingPairModal} footer={false} onCancel={existingPairModalCancel}>
+                <p>{pairWarningMessage && pairWarningMessage}</p>
+                <Space>
+                    <Button type="primary" onClick={() => newPairHandler(REPLACE_FLAG)} danger>Заменить</Button>
+                    <Button onClick={() => existingPairModalCancel()}>Оставить существующую</Button>
+                </Space>
+            </Modal>
+        </>
     );
   }
   
