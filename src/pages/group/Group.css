@@ -5,10 +5,57 @@
     /* width: 100%; */
 }
 #group-info-students-block{
-    background-color: lightgray;
+    background-color: #f5f5f5;
     width: 40%;
+    margin-right: 0.5%;
+    border-radius: 10px;
+}
+#group-info-students-block-students{
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 95%;
 }
 #group-info-now-and-recent-updates-block{
     width: 60%;
     background-color: lightgray;
 }
+.group-info-student-block-item{
+    background-color: #ececec;
+    flex: 0 0 30%;
+    margin: 1%;
+    /* border: 1px solid gray; */
+    border-radius: 5px;
+}
+.group-info-student-block-item-student-credentials{
+    display: block;
+    max-width: fit-content;
+    margin: 5px auto;
+    text-align: center;
+}
+#group-info-students-block-add-attendance{
+    background-color: #ececec;
+    margin: 2% auto;
+    width: 95%;
+    padding: 2% 0;
+    text-align: center;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+}
+#group-info-students-block-add-attendance span {
+    margin-left: 1%;
+}
+
+#online-batch {
+    display: block;
+    margin: 5px auto;
+    height: 10px;
+    width: 90%;
+    border-radius: 3px;
+    background-color: #ff3c38;
+    /* border: 1px solid #FF1F1F; */
+    box-shadow: 2px 2px 2px lightgray;
+  }
+  
+  /* online - #498467 offline - #ff3c38 */

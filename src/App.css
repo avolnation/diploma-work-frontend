@@ -7,18 +7,19 @@ html{
   width: fit-content;
 }
 #header{
+  margin: 0;
   background-color: lightgray;
-  display: flex;
-  justify-content: space-between;
-  padding: 1% 2%;
 }
-.header-item{
-  font-size: 1.5rem;
+#header ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 60px;
 }
-.header-item:hover{
-  opacity: 0.5;
-  cursor: pointer;
-}
-.active{
-  color: red;
+#header ul li a {
+    text-decoration: none;
+    color: black;
 }
