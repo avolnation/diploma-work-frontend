@@ -165,36 +165,30 @@ const ScheduleByGroup = (props) =>{
     return (
       <>
         <div className="App">
-            <div id="header">
-              <span className="header-item">Группы</span>
-              <span className="header-item active">Расписание групп</span>
-              <span className="header-item">Недавние действия</span>
-              <span className="header-item">Мой профиль</span>
-            </div>
-              <div id="day-choose-block" style={{"display": "inline-block", "width": "30%", "height": "500px"}}>
-                <Tabs
-                  size="large"
-                  tabPosition="left"
-                  activeKey={activeTab}
-                  onChange={onTabChange}
-                  defaultActiveKey="Понедельник"
-                  items={[{
-                    key: 'Понедельник', 
-                    label: 'Понедельник',
-                    children: 
-                    <>
-                      {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId} daysOfTheWeek={daysOfTheWeek}/>}
-                    </>
-                  }, 
-                  {key: "Вторник",
-                    label: "Вторник",
-                    children:
-                  <>
-                      {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
-                  </>}
-                  ]}
-                />
-              </div>
+          <div id="day-choose-block" style={{"display": "inline-block", "width": "30%", "height": "500px"}}>
+            <Tabs
+              size="large"
+              tabPosition="left"
+              activeKey={activeTab}
+              onChange={onTabChange}
+              defaultActiveKey="Понедельник"
+              items={[{
+                key: 'Понедельник', 
+                label: 'Понедельник',
+                children: 
+                <>
+                  {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId} daysOfTheWeek={daysOfTheWeek}/>}
+                </>
+              }, 
+              {key: "Вторник",
+                label: "Вторник",
+                children:
+              <>
+                  {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
+              </>}
+              ]}
+            />
+          </div>
         </div>
       </>
       

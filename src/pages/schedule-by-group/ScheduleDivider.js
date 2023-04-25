@@ -45,13 +45,43 @@ const ScheduleDivider = (props) => {
 
     const [ pairWarningMessage, setPairWarningMessage ] = useState('');
 
+    const [ editPairForm ] = Form.useForm()
+    const [ showEditPairModal, setShowEditPairModal] = useState(false)
+    const [ loadingEditPairModal, setLoadingEditPairModal ] = useState(true)
+    
+    // const []
+
     const pairTime = ["9:00 - 10:25", "10:40 - 12:05", "12:25 - 13:50", "14:20 - 15:45", "15:55 - 17:20", "17:30 - 18:55"]    
+
+    const onContextMenuUse = (weekParity, subgroup, index) => {
+        
+        setLoadingEditPairModal(false)
+
+        // setLoadingEditPairModal(true)
+        editPairForm.setFieldsValue({dayOfTheWeek: props.selectedDay, weekParity: weekParity, subgroup: subgroup, group: props.groupId, pairNumber: index + 1});
+        // setShowEditPairModal(true)
+        // props.selectedDay 
+        // TODO: find pair by weekParity, subgroup and day, then fetch, open modal and update if it needed
+        // fetch("http://localhost:3002/schedule/")
+    }
+
+    const onDropdownUse = (obj) => {
+        console.log(obj.key)
+        if(obj.key == 1){
+            setShowEditPairModal(true)
+        }
+    }
 
     // Функция для закрытия модального окна и очистки полей в форме
     const modalHandleCancel = () => {
         setShowModal(false);
         newScheduleForm.resetFields()
     };
+
+    const editPairModalCancel = () => {
+        setShowEditPairModal(false)
+        editPairForm.resetFields()
+    }
 
     const existingPairModalCancel = () => {
         setShowExistingPairModal(false);
@@ -61,7 +91,7 @@ const ScheduleDivider = (props) => {
     const infoToNewPairModal = async (event, idx) => {
         setPairNumber(idx + 1);
         const weekParityAndSubgroup = event.target.id.split(" ");
-        newScheduleForm.setFieldsValue({"weekParity": weekParityAndSubgroup[1], "subgroup": weekParityAndSubgroup[0], group: props.groupId});
+        newScheduleForm.setFieldsValue({"dayOfTheWeek": props.selectedDay, "weekParity": weekParityAndSubgroup[1], "subgroup": weekParityAndSubgroup[0], group: props.groupId});
         setLoading(false);
         setShowModal(true);
     }
@@ -109,12 +139,36 @@ const ScheduleDivider = (props) => {
         // })
       }
 
+
+    // TODO: Fetch(POST запрос) (отправка на сервер новой информации о паре)
+    const editPairHandler = () => {
+
+        const formData = new FormData();
+
+        formData.append('dayOfTheWeek', props.selectedDay);
+        formData.append('weekParity', +editPairForm.getFieldValue("weekParity"));
+        formData.append('group', editPairForm.getFieldValue("group"));
+        formData.append('subject', editPairForm.getFieldValue("subject"));
+        formData.append('subgroup', +editPairForm.getFieldValue("subgroup"));
+        formData.append('pairNumber', +editPairForm.getFieldValue("pairNumber"));
+
+        const data = JSON.stringify(Object.fromEntries(formData))
+        fetch('http://localhost:3002/schedule/edit-schedule', {
+            method: 'POST',
+            body: data, headers: {'Content-Type':'application/json'}
+            })
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+        })
+    }
+
     const pairModeView = (el, index) => {
         if(el.pairMode == 0){
             return (
                 <>
                 { el.additionalInfo["0 2"] ? 
-                    <Dropdown menu={{items: pairMenu, }} trigger={['contextMenu']}>
+                    <Dropdown menu={{items: pairMenu, onClick: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(2,0, index)}>
                             <div style={{"minWidth": "70%", "height": "100px"}}>
                                 <div className="schedule-one-button" id="0 2" >{el.additionalInfo["0 2"].subject[0].abbreviature}</div>
                             </div>
@@ -132,14 +186,18 @@ const ScheduleDivider = (props) => {
                 {
                     el.additionalInfo["0 1"] 
                     ?
-                    <div className="schedule-two-buttons upper-button" id="0 1" >{el.additionalInfo["0 1"].subject[0].abbreviature}</div> 
+                    <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["0 1"].subject[0]["_id"])}>
+                        <div className="schedule-two-buttons upper-button" id="0 1" >{el.additionalInfo["0 1"].subject[0].abbreviature}</div> 
+                    </Dropdown>
                     :
                     <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой</div>
                 }
                 {
                     el.additionalInfo["0 0"] 
                     ?
-                    <div className="schedule-two-buttons lower-button" id="0 0" >{el.additionalInfo["0 0"].subject[0].abbreviature}</div> 
+                    <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["0 0"].subject[0]["_id"])}>
+                        <div className="schedule-two-buttons lower-button" id="0 0" >{el.additionalInfo["0 0"].subject[0].abbreviature}</div> 
+                    </Dropdown>
                     :
                     <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой</div>
                 }
@@ -153,30 +211,39 @@ const ScheduleDivider = (props) => {
                     {
                         el.additionalInfo["1 1"] 
                         ?
-                        <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" >{el.additionalInfo["1 1"].subject[0].abbreviature}</div> 
+                        <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["1 1"].subject[0]["_id"])}>
+                            <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" >{el.additionalInfo["1 1"].subject[0].abbreviature}</div> 
+                        </Dropdown>
                         :
                         <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой | Первая подгруппа</div>
                     }
                     {
                         el.additionalInfo["2 1"] 
                         ?
-                        <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" >{el.additionalInfo["2 1"].subject[0].abbreviature}</div> 
+                        <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["2 1"].subject[0]["_id"])}>
+                            <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" >{el.additionalInfo["2 1"].subject[0].abbreviature}</div> 
+                        </Dropdown>
                         :
                         <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой | Вторая подгруппа</div>
                     }
                     </div>
                     <div>
                     {
-                        el.additionalInfo["1 0"] 
+                        el.additionalInfo["1 0"]
                         ?
-                        <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" >{el.additionalInfo["1 0"].subject[0].abbreviature}</div> 
+                        <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["1 0"].subject[0]["_id"])}>
+                            <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" >{el.additionalInfo["1 0"].subject[0].abbreviature}</div> 
+                        </Dropdown>
                         :
                         <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой | Первая подгруппа</div>
                     }
                     {
                         el.additionalInfo["2 0"] 
                         ?
-                        <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" >{el.additionalInfo["2 0"].subject[0].abbreviature}</div> 
+                        <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["2 0"].subject[0]["_id"])}>
+                            <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" >{el.additionalInfo["2 0"].subject[0].abbreviature}</div> 
+                        </Dropdown>
+                        
                         :
                         <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой | Вторая подгруппа</div>
                     }
@@ -209,7 +276,7 @@ const ScheduleDivider = (props) => {
                             </Tooltip>
                             {
                                 Object.keys(el.additionalInfo).length >= 1 ? 
-                                <Tooltip title="Внимание! При обновлении и редактировании уже созданные пары удалятся">
+                                <Tooltip title="Внимание! При выборе следующего режима и добавлении пары, существующие удалятся">
                                     <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
                                 </Tooltip> 
                                 :
@@ -229,7 +296,7 @@ const ScheduleDivider = (props) => {
                 <>
                 <Form style={{"marginTop": "5%"}} form={newScheduleForm} onFinish={() => newPairHandler()}>
                     <Form.Item name="dayOfTheWeek">
-                        <Select defaultValue={props.selectedDay} options={props.daysOfTheWeek} disabled/>
+                        <Select options={props.daysOfTheWeek} disabled/>
                     </Form.Item>
                     <Form.Item name="weekParity">
                         <Radio.Group>
@@ -264,6 +331,39 @@ const ScheduleDivider = (props) => {
                     <Button type="primary" onClick={() => newPairHandler(REPLACE_FLAG)} danger>Заменить</Button>
                     <Button onClick={() => existingPairModalCancel()}>Оставить существующую</Button>
                 </Space>
+            </Modal>
+            <Modal title="Редактирование" open={showEditPairModal} footer={false} onCancel={editPairModalCancel}>
+            {loadingEditPairModal ? 
+                <Skeleton/> : 
+                <Form style={{"marginTop": "5%"}} form={editPairForm} onFinish={() => editPairHandler()}>
+                    <Form.Item name="dayOfTheWeek">
+                        <Select options={props.daysOfTheWeek} disabled/>
+                    </Form.Item>
+                    <Form.Item name="weekParity">
+                        <Radio.Group>
+                            <Radio.Button value={2}>Каждую неделю</Radio.Button>
+                            <Radio.Button value={1}>Над чертой</Radio.Button>
+                            <Radio.Button value={0}>Под чертой</Radio.Button>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item name="group" rules={[{required: true, message: "Пожалуйста, выберите группу!"}]}>
+                        <Select options={groupsFromRedux?.groups}/>
+                    </Form.Item>
+                    <Form.Item name="subject" rules={[{required: true, message: "Пожалуйста, выберите предмет!"}]}>
+                        <Select options={subjectsFromRedux?.allSubjects}/>
+                    </Form.Item>
+                    <Form.Item name="subgroup" labelCol={{span: 4}}>
+                        <Radio.Group>
+                            <Radio.Button value={0}>Общая</Radio.Button>
+                            <Radio.Button value={1}>Первая</Radio.Button>
+                            <Radio.Button value={2}>Вторая</Radio.Button>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item>
+                        <Button id="submit" type="primary" htmlType="submit">Обновить</Button>
+                    </Form.Item>
+                </Form>
+            }
             </Modal>
         </>
     );

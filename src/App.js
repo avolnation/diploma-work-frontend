@@ -15,6 +15,12 @@ import ScheduleByGroup from './pages/schedule-by-group/ScheduleByGroup';
 const App = () => {
   return (
     <BrowserRouter>
+              <div id="header">
+                <span class="header-item">Группы</span>
+                <span class="header-item">Расписание групп</span>
+                <span class="header-item">Недавние действия</span>
+                <span class="header-item">Мой профиль</span>
+              </div>
         <Switch>
           <Route path="/schedule-by-group/:groupId" component={ScheduleByGroup}>
             {/* <ScheduleByGroup/> */}
@@ -29,13 +35,7 @@ const App = () => {
             <Groups/>
           </Route>
           <Route path="/">
-            <div className="App">
-              <div id="header">
-                <span class="header-item">Группы</span>
-                <span class="header-item">Расписание групп</span>
-                <span class="header-item">Недавние действия</span>
-                <span class="header-item">Мой профиль</span>
-              </div>
+            <div className="App"> 
             </div>
           </Route>
         </Switch>

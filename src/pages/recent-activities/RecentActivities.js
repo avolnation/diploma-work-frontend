@@ -26,12 +26,6 @@ const RecentActivities = () => {
 
     return (
       <div className="App">
-          <div id="header">
-            <span className="header-item">Группы</span>
-            <span className="header-item">Расписание групп</span>
-            <span className="header-item active">Недавние действия</span>
-            <span className="header-item">Мой профиль</span>
-          </div>
           <div id="recent-activities-block">
             {lastActivities.length == 0 
             ? <span>Нет последних посещений. Возможно, нет связи с сервером</span> 

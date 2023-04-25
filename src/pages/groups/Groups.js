@@ -4,12 +4,6 @@ import "./Groups.css"
 const Groups = () =>{
     return (
       <div className="App">
-          <div id="header">
-            <span className="header-item active">Группы</span>
-            <span className="header-item">Расписание групп</span>
-            <span className="header-item">Недавние действия</span>
-            <span className="header-item">Мой профиль</span>
-          </div>
           <div id="groups-info">
             <div>
 
