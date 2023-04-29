@@ -9,6 +9,7 @@ import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed }
 
 const ScheduleDivider = (props) => {
 
+    const API_BASE_URL = process.env.REACT_APP_BASE_URL;
     const REPLACE_FLAG = true;
 
     const pairMenu = [
@@ -117,7 +118,7 @@ const ScheduleDivider = (props) => {
     
         const data = JSON.stringify(Object.fromEntries(formData))
       
-        fetch("http://localhost:3002/" + 'schedule/new-schedule', 
+        fetch(`${API_BASE_URL}schedule/new-schedule`, 
         {method: 'POST', 
         body: data, headers: {'Content-Type':'application/json'}})
         .then(res => {
@@ -153,7 +154,7 @@ const ScheduleDivider = (props) => {
         formData.append('pairNumber', +editPairForm.getFieldValue("pairNumber"));
 
         const data = JSON.stringify(Object.fromEntries(formData))
-        fetch('http://localhost:3002/schedule/edit-schedule', {
+        fetch(`${API_BASE_URL}schedule/edit-schedule`, {
             method: 'POST',
             body: data, headers: {'Content-Type':'application/json'}
             })

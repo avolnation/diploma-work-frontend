@@ -5,6 +5,8 @@ import {
 
 import _ from 'lodash'
 
+const API_BASE_URL = process.env.REACT_APP_BASE_URL;
+
 const initialState = {
     loading: true,
     groups: [],
@@ -23,7 +25,7 @@ const initialState = {
 export const fetchSubjectsByGroupIdAndDay = createAsyncThunk('subjects/fetchSubjectsByGroupIdAndDay',
     async (data) => {
         const { groupId, day } = data;
-        const result = await fetch(`http://localhost:3002/schedule/get-schedule-by-day-and-group?day=${day}&group=${groupId}`)
+        const result = await fetch(`${API_BASE_URL}schedule/get-schedule-by-day-and-group?day=${day}&group=${groupId}`)
         const subjects = await result.json()
         return {day: day, subjects: subjects}
     })

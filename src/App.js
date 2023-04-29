@@ -21,7 +21,7 @@ const App = () => {
 
   const dispatch = useDispatch()
 
-  const API_URL = "http://localhost:3002";
+  const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     apiFetch('get-all-groups');
@@ -30,7 +30,7 @@ const App = () => {
   const apiFetch = (req) => {
     switch(req){
         case 'get-all-groups': 
-        fetch(API_URL + "/groups/get-all-groups")
+        fetch(`${API_BASE_URL}groups/get-all-groups`)
         .then(result => result.json())
         .then(result => {
             let groupsToSet = result.groups.map(el => {

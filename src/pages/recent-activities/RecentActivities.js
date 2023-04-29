@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 
 const RecentActivities = () => {
 
-    const localhost_url = "http://localhost:3002/";
+    const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 
     const [lastActivities, setLastActivities] = useState([]);
 
     const getLastActivities = () => {
-        fetch( localhost_url + "attend/last-attendances")
+        fetch(API_BASE_URL + "attend/last-attendances")
         .then(result => result.json())
         .then(result => {
             setLastActivities(result.attendances)
