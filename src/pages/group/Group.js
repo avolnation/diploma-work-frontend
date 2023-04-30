@@ -95,10 +95,10 @@ const Group = (props) => {
         return (
           <>
             <div className="group-info-pair-now-block-pair-info">
-              <span className="pair-info-pair-subgroup">{`${filteredPairs[0].subgroup} п-па.`}</span>
-              <span className="pair-info-pair-title">{filteredPairs[0].subject.title}</span>
-              <span className="pair-info-pair-lecturer">{filteredPairs[0].subject.lecturer}</span>
-              <span className="pair-info-pair-classroom">{`ауд. ${filteredPairs[0].classroom}`}</span>
+              <span className="pair-line pair-info-pair-subgroup"><span className="title">Подгруппа:</span><span className="text">{`${filteredPairs[0].subgroup} п-па.`}</span></span>
+              <span className="pair-line pair-info-pair-title"><span className="title">Предмет:</span><span className="text">{filteredPairs[0].subject.title}</span></span>
+              <span className="pair-line pair-info-pair-lecturer"><span className="title">Лектор:</span><span className="text">{filteredPairs[0].subject.lecturer}</span></span>
+              <span className="pair-line pair-info-pair-classroom"><span className="title">Аудитория:</span><span className="text">{`${filteredPairs[0].classroom}`}</span></span>
             </div>
           </>
         )
@@ -177,7 +177,7 @@ const Group = (props) => {
       <div className="App">
           <div id="group-info">
             <div id="group-info-students-block">
-            <div id="group-info-pair-now-block"> 
+            <div id="group-info-pair-now-block" className="default-block"> 
             <div className="group-info-students-block-add-attendance">
               <ClockCircleOutlined/> 
               <span>
@@ -198,7 +198,7 @@ const Group = (props) => {
               : <LoadingOutlined style={{"display": "block", "fontSize": "75px", "margin": "0 auto"}}/>}
               </div>
             </div>
-            <div id="group-info-students-all-block">
+            <div id="group-info-students-all-block" className="default-block">
               <div className="group-info-students-block-add-attendance">
                       <TeamOutlined />
                       <span>Посещение занятия студентами</span>
@@ -218,7 +218,7 @@ const Group = (props) => {
             </div>
 
             </div>
-            <div id="group-info-now-and-recent-updates-block">
+            <div id="group-info-now-and-recent-updates-block" className="default-block">
                 <div className="group-info-students-block-add-attendance">
                   <span>
                     <InfoCircleOutlined />
