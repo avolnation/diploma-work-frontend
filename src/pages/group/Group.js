@@ -2,8 +2,8 @@ import "../../App.css"
 import "./Group.css"
 
 import { useEffect, useState, useForm } from "react";
-import { Tooltip } from "antd";
-import { CheckOutlined, ClockCircleOutlined, FrownOutlined, InfoCircleOutlined, TeamOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Tooltip, Dropdown } from "antd";
+import { CheckOutlined, ClockCircleOutlined, FrownOutlined, InfoOutlined, TeamOutlined, LoadingOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { EmojiProvider, Emoji } from "react-apple-emojis"
 import emojiData from "react-apple-emojis/src/data.json"
 
@@ -13,6 +13,26 @@ const Group = (props) => {
     const groupId = props.match.params.groupId;
     // const timeNow = 1682943900000;
     const timeNow = 1680518460000;
+
+    const items = [{ key: 1, 
+                     label: (
+                     <a>
+                       Страница студента
+                     </a>),
+                     icon: <InfoOutlined />},
+                     {key: 2, 
+                      label: (
+                      <a>
+                        Присутствует
+                      </a>
+                     ),
+                      icon : <CheckOutlined />},
+                    {key: 3, label: (
+                      <a> 
+                        Отсутствует 
+                      </a>
+                    ),
+                      icon: <CloseOutlined />}]
     
     const [ students, setStudents ] = useState([])
     const [ pairInfo, setPairInfo ] = useState({})
@@ -20,7 +40,7 @@ const Group = (props) => {
     // const [ attendances, setAttendances ] = useState([])
     const [ loadingPairInfo, setLoadingPairInfo ] = useState(true)
     const [ loadingStudents, setLoadingStudents ] = useState(true)
-    const [ searchStudentInput, setsSearchStudentInput] = useState("")
+    const [ searchStudentInput, setSearchStudentInput] = useState("")
 
     // useEffect(() => {
 
@@ -203,15 +223,38 @@ const Group = (props) => {
                       <TeamOutlined />
                       <span>Посещение занятия студентами</span>
               </div>
-              <input type="text" placeholder="Введите имя или фамилию студента..." onChange={(e) => setsSearchStudentInput(e.target.value)}/>
+              <input type="text" placeholder="Введите имя или фамилию студента..." onChange={(e) => setSearchStudentInput(e.target.value)}/>
               <div id="group-info-students-block-students">
                 {loadingStudents ? <LoadingOutlined style={{"display": "block", "fontSize": "75px", "margin": "0 auto"}}/> : 
                   students && filterStudentsHandler().map(student => {
                   return (
-                    <div key={student._id} className={"group-info-student-block-item " + (student.hasOwnProperty("attendance") ? "online-batch-online" : "online-batch-offline")}>
-                        <div className="group-info-student-block-item-student-subgroup-batch">{student.subgroup}</div>
-                      <span className="group-info-student-block-item-student-credentials">{student.name + " " + student.surname}</span>
-                    </div>
+                      <Dropdown menu={{items: [{ key: 1, 
+                        label: (
+                        <a>
+                          Страница студента
+                        </a>),
+                        icon: <InfoOutlined />},
+                        {key: 2, 
+                         label: (
+                         <a>
+                           Присутствует
+                         </a>
+                        ),
+                         icon : <CheckOutlined />,
+                         disabled: student.hasOwnProperty("attendance"), 
+                         onClick: () => {console.log("Hi!")}},
+                       {key: 3, label: (
+                         <a> 
+                           Отсутствует 
+                         </a>
+                       ),
+                         icon: <CloseOutlined />, 
+                         disabled: !(student.hasOwnProperty("attendance"))}],}} trigger={['contextMenu']}>  
+                        <div key={student._id} id={student._id} className={"group-info-student-block-item " + (student.hasOwnProperty("attendance") ? "online-batch-online" : "online-batch-offline")}>
+                            <div className="group-info-student-block-item-student-subgroup-batch">{student.subgroup}</div>
+                            <span className="group-info-student-block-item-student-credentials">{student.name + " " + student.surname}</span>
+                        </div>
+                      </Dropdown>
                   )
                 })}
               </div>

@@ -178,6 +178,6 @@ hr {
     border-top: 2px solid #ececec;
 }
 .pair-info-pair-title {
-    font-weight: 600;
+    /* font-weight: 600; */
 }
 /* online - #498467 offline - #ff3c38 */
