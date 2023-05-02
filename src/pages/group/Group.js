@@ -2,7 +2,7 @@ import "../../App.css"
 import "./Group.css"
 
 import { useEffect, useState, useForm } from "react";
-import { Tooltip, Dropdown } from "antd";
+import { Tooltip, Dropdown, message } from "antd";
 import { CheckOutlined, ClockCircleOutlined, FrownOutlined, InfoOutlined, TeamOutlined, LoadingOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { EmojiProvider, Emoji } from "react-apple-emojis"
 import emojiData from "react-apple-emojis/src/data.json"
@@ -11,29 +11,9 @@ const Group = (props) => {
 
     const API_BASE_URL = process.env.REACT_APP_BASE_URL;
     const groupId = props.match.params.groupId;
-    // const timeNow = 1682943900000;
-    const timeNow = 1680518460000;
+    const timeNow = 1682943900000;
+    // const timeNow = 1680518460000;
 
-    const items = [{ key: 1, 
-                     label: (
-                     <a>
-                       Страница студента
-                     </a>),
-                     icon: <InfoOutlined />},
-                     {key: 2, 
-                      label: (
-                      <a>
-                        Присутствует
-                      </a>
-                     ),
-                      icon : <CheckOutlined />},
-                    {key: 3, label: (
-                      <a> 
-                        Отсутствует 
-                      </a>
-                    ),
-                      icon: <CloseOutlined />}]
-    
     const [ students, setStudents ] = useState([])
     const [ pairInfo, setPairInfo ] = useState({})
     const [ pairNow, setPairNow ] = useState([])
@@ -42,9 +22,9 @@ const Group = (props) => {
     const [ loadingStudents, setLoadingStudents ] = useState(true)
     const [ searchStudentInput, setSearchStudentInput] = useState("")
 
-    // useEffect(() => {
-
-    // }, [])
+    useEffect(() => {
+      console.log(students)
+    }, [students])
 
     useEffect(() => {
       fetch(`${API_BASE_URL}functions/pair-info-from-timestamp?timestamp=${timeNow}`)
@@ -54,33 +34,11 @@ const Group = (props) => {
         return response.info
       })
       .then((pairData) => {
-
         fetch(`${API_BASE_URL}students?group=${groupId}`)
         .then(data => data.json())
         .then(students => {
-          // setStudents(students.students)
-          fetch(`${API_BASE_URL}attend?lte=${pairData.pairEnds}&gte=${pairData.pairStarts}`)
-          .then(response => response.json())
-          .then(attendances => {
-            // setAttendances(response.attendances)
-            // console.log(attendances.attendances)
-            let mappedStudents = students.students;
 
-            mappedStudents = mappedStudents.map((student, index) => {
-              let attendanceMatch = attendances.attendances.find(element => student._id == element.student);
-              if(attendanceMatch){
-                return {...student, attendance: attendanceMatch}
-              }
-              else {
-                return {...student}
-              }
-            })
-
-            setStudents(mappedStudents)
-
-            setLoadingStudents(false)
-          })
-        })
+        fetchStudentsWithAttendance(pairInfo);
         
         fetch(`${API_BASE_URL}schedule?pairNumber=${pairData.pairNumber}&dayOfTheWeek=${pairData.dayOfTheWeek}`)
         .then(response => response.json())
@@ -89,13 +47,78 @@ const Group = (props) => {
           setLoadingPairInfo(false)
         })
       })
-    }, [])
+    })
+  }, [])
+
+    const fetchStudentsWithAttendance = (pairInfo) => {
+      
+      setLoadingStudents(true);
+
+      fetch(`${API_BASE_URL}students?group=${groupId}`)
+      .then(response => response.json())
+      .then(students => {
+        fetch(`${API_BASE_URL}attend?lte=${pairInfo.pairEnds}&gte=${pairInfo.pairStarts}`)
+          .then(response => response.json())
+          .then(attendances => {
+
+          let mappedStudents = students.students;
+
+          mappedStudents = mappedStudents.map((student, index) => {
+            let attendanceMatch = attendances.attendances.find(element => student._id == element.student);
+            if(attendanceMatch){
+              return {...student, attendance: attendanceMatch}
+            }
+            else {
+              return {...student}
+            }
+          })
+
+          setStudents(mappedStudents);
+
+          setLoadingStudents(false);
+    }) 
+  })
 
 
-    // useEffect(() => {
-    //   console.log(searchStudentInput)
-    // }, [searchStudentInput])
+    }
 
+    const attendanceHandler = (student, attendanceId, action) => {
+      switch(action){
+        case "register":
+          // TODO: register attendance (fetch) (flag fromClient !!!)
+          let pair = pairNow.filter(pair => pair.subgroup == 0 || student.subgroup)
+          if(pair){
+            let data = {
+              date: timeNow,
+              student: student._id,
+              subject: pair[0].subject._id,
+              fromClient: true
+            }
+            fetch(`${API_BASE_URL}attend/`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(data)})
+            // TODO: Notification (success, error)
+            .then(response =>  response.json())
+            .then(response => {
+
+              response.status == "success" ? message.success({content: response.message, duration: 2, style: {marginTop: '5vh',}}) : message.error({content: response.message, duration: 2, style: {marginTop: '5vh',}});
+
+              fetchStudentsWithAttendance(pairInfo);
+
+            })
+
+          }  
+        break; 
+        case "unregister":   
+          fetch(`${API_BASE_URL}attend?_id=${attendanceId}&student=${student}`, {method: "DELETE"})
+          .then(response => response.json())
+          .then(response => {
+            
+              response.status == "success" ? message.success({content: response.message, duration: 2, style: {marginTop: '5vh',}}) : message.error({content: response.message, duration: 2, style: {marginTop: '5vh',}});
+
+              fetchStudentsWithAttendance(pairInfo);
+          })
+        break;
+      }
+    }
 
     const pairNowHandler = () => {
       // массив расписания за день
@@ -115,9 +138,8 @@ const Group = (props) => {
         return (
           <>
             <div className="group-info-pair-now-block-pair-info">
-              <span className="pair-line pair-info-pair-subgroup"><span className="title">Подгруппа:</span><span className="text">{`${filteredPairs[0].subgroup} п-па.`}</span></span>
               <span className="pair-line pair-info-pair-title"><span className="title">Предмет:</span><span className="text">{filteredPairs[0].subject.title}</span></span>
-              <span className="pair-line pair-info-pair-lecturer"><span className="title">Лектор:</span><span className="text">{filteredPairs[0].subject.lecturer}</span></span>
+              <span className="pair-line pair-info-pair-lecturer"><span className="title">Преподаватель:</span><span className="text">{filteredPairs[0].subject.lecturer}</span></span>
               <span className="pair-line pair-info-pair-classroom"><span className="title">Аудитория:</span><span className="text">{`${filteredPairs[0].classroom}`}</span></span>
             </div>
           </>
@@ -131,10 +153,10 @@ const Group = (props) => {
           return (
             <>
               <div className="group-info-pair-now-block-pair-info">
-                <span className="pair-info-pair-subgroup">{`${filteredPairs[0].subgroup} п-па.`}</span>
-                <span className="pair-info-pair-title">{filteredPairs[0].subject.title}</span>
-                <span className="pair-info-pair-lecturer">{filteredPairs[0].subject.lecturer}</span>
-                <span className="pair-info-pair-classroom">{`ауд. ${filteredPairs[0].classroom}`}</span>
+                <span className="pair-line pair-info-pair-subgroup"><span className="title">Подгруппа:</span><span className="text">{`${filteredPairs[0].subgroup} п-па.`}</span></span>
+                <span className="pair-line pair-info-pair-title"><span className="title">Предмет:</span><span className="text">{filteredPairs[0].subject.title}</span></span>
+                <span className="pair-line pair-info-pair-lecturer"><span className="title">Преподаватель:</span><span className="text">{filteredPairs[0].subject.lecturer}</span></span>
+                <span className="pair-line pair-info-pair-classroom"><span className="title">Аудитория:</span><span className="text">{`${filteredPairs[0].classroom}`}</span></span>
               </div>
             </>
           )            
@@ -147,10 +169,10 @@ const Group = (props) => {
             return (
               <>
                 <div className="group-info-pair-now-block-pair-info">
-                  <span className="pair-info-pair-subgroup">{`${filteredPairs[0].subgroup} п-па.`}</span>
-                  <span className="pair-info-pair-title">{filteredPairs[0].subject.title}</span>
-                  <span className="pair-info-pair-lecturer">{filteredPairs[0].subject.lecturer}</span>
-                  <span className="pair-info-pair-classroom">{`ауд. ${filteredPairs[0].classroom}`}</span>
+                <span className="pair-line pair-info-pair-subgroup"><span className="title">Подгруппа:</span><span className="text">{`${filteredPairs[0].subgroup} п-па.`}</span></span>
+                  <span className="pair-line pair-info-pair-title"><span className="title">Предмет:</span><span className="text">{filteredPairs[0].subject.title}</span></span>
+                  <span className="pair-line pair-info-pair-lecturer"><span className="title">Преподаватель:</span><span className="text">{filteredPairs[0].subject.lecturer}</span></span>
+                  <span className="pair-line pair-info-pair-classroom"><span className="title">Аудитория:</span><span className="text">{`${filteredPairs[0].classroom}`}</span></span>
                 </div>
               </>
             )
@@ -159,17 +181,17 @@ const Group = (props) => {
             return (
               <>
                   <div className="group-info-pair-now-block-pair-info">
-                    {/* <span className="pair-info-pair-subgroup">{`${filteredPairs[0].subgroup} п-па.`}</span> */}
-                    <span className="pair-info-pair-title">{filteredPairs[0].subject.title}</span>
-                    <span>{filteredPairs[0].subject.lecturer}</span>
-                    <span>{`ауд. ${filteredPairs[0].classroom}`}</span>
+                    <span className="pair-line pair-info-pair-subgroup"><span className="title">Подгруппа:</span><span className="text">{`${filteredPairs[0].subgroup} п-па.`}</span></span>
+                    <span className="pair-line pair-info-pair-title"><span className="title">Предмет:</span><span className="text">{filteredPairs[0].subject.title}</span></span>
+                    <span className="pair-line pair-info-pair-lecturer"><span className="title">Преподаватель:</span><span className="text">{filteredPairs[0].subject.lecturer}</span></span>
+                    <span className="pair-line pair-info-pair-classroom"><span className="title">Аудитория:</span><span className="text">{`${filteredPairs[0].classroom}`}</span></span>
                   </div>
                   <hr/>
                   <div className="group-info-pair-now-block-pair-info">
-                    {/* <span className="pair-info-pair-subgroup">{`${filteredPairs[1].subgroup} п-па.`}</span> */}
-                    <span className="pair-info-pair-title">{filteredPairs[1].subject.title}</span>
-                    <span>{filteredPairs[1].subject.lecturer}</span>
-                    <span>{`ауд. ${filteredPairs[1].classroom}`}</span>
+                    <span className="pair-line pair-info-pair-subgroup"><span className="title">Подгруппа:</span><span className="text">{`${filteredPairs[1].subgroup} п-па.`}</span></span>
+                    <span className="pair-line pair-info-pair-title"><span className="title">Предмет:</span><span className="text">{filteredPairs[1].subject.title}</span></span>
+                    <span className="pair-line pair-info-pair-lecturer"><span className="title">Преподаватель:</span><span className="text">{filteredPairs[1].subject.lecturer}</span></span>
+                    <span className="pair-line pair-info-pair-classroom"><span className="title">Аудитория:</span><span className="text">{`${filteredPairs[1].classroom}`}</span></span>
                   </div>
               </>
             )
@@ -232,7 +254,8 @@ const Group = (props) => {
                         label: (
                         <a>
                           Страница студента
-                        </a>),
+                        </a>
+                        ),
                         icon: <InfoOutlined />},
                         {key: 2, 
                          label: (
@@ -242,14 +265,16 @@ const Group = (props) => {
                         ),
                          icon : <CheckOutlined />,
                          disabled: student.hasOwnProperty("attendance"), 
-                         onClick: () => {console.log("Hi!")}},
-                       {key: 3, label: (
+                         onClick: () => {attendanceHandler(student, "", "register")}},
+                       {key: 3, 
+                        label: (
                          <a> 
                            Отсутствует 
                          </a>
-                       ),
+                        ),
                          icon: <CloseOutlined />, 
-                         disabled: !(student.hasOwnProperty("attendance"))}],}} trigger={['contextMenu']}>  
+                         disabled: !(student.hasOwnProperty("attendance")), 
+                         onClick: () => {attendanceHandler(student._id, student.attendance._id, "unregister")}}],}} trigger={['contextMenu']}>  
                         <div key={student._id} id={student._id} className={"group-info-student-block-item " + (student.hasOwnProperty("attendance") ? "online-batch-online" : "online-batch-offline")}>
                             <div className="group-info-student-block-item-student-subgroup-batch">{student.subgroup}</div>
                             <span className="group-info-student-block-item-student-credentials">{student.name + " " + student.surname}</span>
@@ -267,7 +292,6 @@ const Group = (props) => {
                     <InfoCircleOutlined />
                     <span>Недавние действия</span>
                   </span>
-
                 </div>
             </div>
           </div>
