@@ -4,14 +4,25 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import locale from "antd/locale/ru_RU"
+import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
+import { ConfigProvider } from 'antd';
+
 import { Provider } from 'react-redux';
 import store from './redux/store'
+
+dayjs.locale('ru');
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <Provider store={store}>
-    <App />
+    <ConfigProvider locale={locale}>
+      <App />
+    </ConfigProvider>
   </Provider>
   //</React.StrictMode>
 );

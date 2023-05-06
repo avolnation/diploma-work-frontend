@@ -1,0 +1,82 @@
+.student-info {
+    display: flex;
+    margin: 1% auto 0 auto;
+    padding: 0 20px;
+    max-width: 1400px;
+}
+
+.student-info-section-badge {
+    background-color: #b05500;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.default-block {
+    padding: 15px;
+    box-shadow: 15px 15px 20px 0px rgba(0, 0, 0, 0.1);
+    background-color: #f5f5f5;
+    border-radius: 18px;
+}
+
+.student-info-section-text {
+    display: block;
+}
+
+.student-info-filter-and-info-block {
+    width: 40%;
+}
+.student-info-about-student-section {
+    /* width: 40%; */
+    margin-right: 8px;
+}
+
+.student-info-absenteeism-section {
+    width: 60%;
+}
+
+.student-info-filter-absenteeisms {
+    margin: 8px 8px 0px 0px;
+}
+
+.student-info-absenteeism-section-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    display: flex;
+    background-color: #ececec;
+    border-radius: 10px;
+    padding: 1% 2%;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-weight: 700;
+}
+
+.student-info-section-info {
+    padding: 2% 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ant-form-item {
+    margin-bottom: 0 !important;
+}
+
+.ant-picker:hover {
+    border-color: #b05500;
+}
+.ant-picker-focused {
+    border-color: #b05500;
+}
+.ant-picker-active-bar {
+    background: #b05500 !important;
+}
+.ant-radio-checked .ant-radio-inner {
+    border-color: #b05500 !important;
+    background-color: #b05500 !important;
+}

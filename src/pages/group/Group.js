@@ -4,8 +4,6 @@ import "./Group.css"
 import { useEffect, useState, useForm } from "react";
 import { Tooltip, Dropdown, message } from "antd";
 import { CheckOutlined, ClockCircleOutlined, FrownOutlined, InfoOutlined, TeamOutlined, LoadingOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
-import { EmojiProvider, Emoji } from "react-apple-emojis"
-import emojiData from "react-apple-emojis/src/data.json"
 
 const Group = (props) => {
 
@@ -38,9 +36,9 @@ const Group = (props) => {
         .then(data => data.json())
         .then(students => {
 
-        fetchStudentsWithAttendance(pairInfo);
+        fetchStudentsWithAttendance(pairData);
         
-        fetch(`${API_BASE_URL}schedule?pairNumber=${pairData.pairNumber}&dayOfTheWeek=${pairData.dayOfTheWeek}`)
+        fetch(`${API_BASE_URL}schedule?pairNumber=${pairData.pairNumber}&dayOfTheWeek=${pairData.dayOfTheWeek}&group=${groupId}`)
         .then(response => response.json())
         .then(pairData => {
           setPairNow(pairData.pairs)
@@ -49,6 +47,11 @@ const Group = (props) => {
       })
     })
   }, [])
+
+  // TODO : Refresh attendances every X seconds (???)
+  useEffect(() => {
+    
+  }, []) 
 
     const fetchStudentsWithAttendance = (pairInfo) => {
       
