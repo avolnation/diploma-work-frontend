@@ -11,8 +11,8 @@ import {
 
 import { useEffect, useState, useForm } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Tooltip, DatePicker, Input, Select, Radio, Form, Modal, Button } from "antd"
-import { LoadingOutlined, UserOutlined, InfoCircleOutlined, SearchOutlined, InfoOutlined } from '@ant-design/icons';
+import { Tooltip, DatePicker, Input, Select, Radio, Form, Modal, Button, Skeleton, Dropdown, Popconfirm } from "antd"
+import { LoadingOutlined, UserOutlined, InfoCircleOutlined, SearchOutlined, InfoOutlined, CheckOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 
 import moment from "moment/moment";
 
@@ -35,6 +35,9 @@ const Groups = (props) =>{
     const [ absenteeismsForSelect, setAbsenteeismsForSelect ] = useState([])
     // const [ absenteeismType, setAbsenteeismType ] = useState([{title: "Все", label: "Все"}, {title: "Лекция", label: "Лекция"}, {title: ""}])
     const [ absenteeisms, setAbsenteeisms ] = useState([]);
+
+    const [ absenteeismsByFilter, setAbsenteeismsByFilter ] = useState([]);
+    const [ loadingAbsenteeismsByFilter, setLoadingAbsenteeismsByFilter ] = useState(true);
 
     const [ radioValue, setRadioValue ] = useState(1);
 
@@ -69,14 +72,18 @@ const Groups = (props) =>{
         fetch(`${API_BASE_URL}absenteeisms?studentId=${studentId}&dateByDay=${new Date(form["date-by-day"].$d).getTime()}&subject=${absenteeisms.find((el) => el._id == form.subject).items[0].subjectId}`)
         .then(response => response.json())
          .then(absenteeisms => {
-        console.log(absenteeisms.absenteeisms) 
+           setAbsenteeismsByFilter(absenteeisms.absenteeisms);
+           setAbsenteeismsModalOpen(true);
+           setLoadingAbsenteeismsByFilter(false);
       })
       }
       if(form.hasOwnProperty("date-by-range")){
         fetch(`${API_BASE_URL}absenteeisms?studentId=${studentId}&dateByRange[0]=${new Date(form["date-by-range"][0].$d).getTime()}&dateByRange[1]=${new Date(form["date-by-range"][1].$d).getTime()}&subject=${absenteeisms.find((el) => el._id == form.subject).items[0].subjectId}`)
           .then(response => response.json())
          .then(absenteeisms => {
-        console.log(absenteeisms.absenteeisms)  
+           setAbsenteeismsByFilter(absenteeisms.absenteeisms);
+           setAbsenteeismsModalOpen(true);
+           setLoadingAbsenteeismsByFilter(false);
       })
       }
     }
@@ -85,6 +92,48 @@ const Groups = (props) =>{
       setAbsenteeismsModalOpen(false);
     }
     
+    const handleFilteredAbsenteeisms = (type, absenteeism) => {
+
+      let absenteeismsByFilterCopy = absenteeismsByFilter;
+
+      setLoadingAbsenteeismsByFilter(true);
+      setAbsenteeismsByFilter([]);
+
+      switch(type) {
+        case "negative":
+          fetch(`${API_BASE_URL}absenteeisms`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({absenteeismId: absenteeism._id, type: 0})})
+          .then(result => result.json())
+          .then(result => {
+            absenteeismsByFilterCopy[absenteeismsByFilterCopy.findIndex(el => el._id === result.result._id)] = result.result;
+
+            setAbsenteeismsByFilter(absenteeismsByFilterCopy);
+            setLoadingAbsenteeismsByFilter(false);
+          })
+          break;
+        case "positive": 
+          fetch(`${API_BASE_URL}absenteeisms`, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({absenteeismId: absenteeism._id, type: 1})})
+          .then(result => result.json())
+          .then(result => {
+            absenteeismsByFilterCopy[absenteeismsByFilterCopy.findIndex(el => el._id === result.result._id)] = result.result;
+
+            setAbsenteeismsByFilter(absenteeismsByFilterCopy);
+            setLoadingAbsenteeismsByFilter(false);
+          })
+          break;
+        case "delete": 
+          fetch(`${API_BASE_URL}absenteeisms?absenteeismId=${absenteeism._id}`, {method: "DELETE"})
+          .then(result => result.json())
+          .then(result => {
+            absenteeismsByFilterCopy = absenteeismsByFilterCopy.filter(item => item._id !== result.result._id)
+
+            setAbsenteeismsByFilter(absenteeismsByFilterCopy);
+            setLoadingAbsenteeismsByFilter(false);
+
+          })
+          break;
+      }
+    }
+
     return (
       <div className="App">
           <div className="student-info">
@@ -142,10 +191,6 @@ const Groups = (props) =>{
                         </Form.Item>
                         <Button htmlType="submit" style={{"marginTop": "8px"}}><SearchOutlined/>Поиск</Button>
                       </Form>
-                      {/* <div>
-                        {radioValue === 1 ? <DatePicker  style={{"width": "50%"}}/> : <RangePicker onChange={(e) => {console.log(new Date(e[0].$d).getTime())}}/>}
-                      </div> */}
-                        {/* <Select options={}/> */}
               </div>
             </div>
             <div className="student-info-absenteeism-section default-block">
@@ -160,8 +205,55 @@ const Groups = (props) =>{
                 </div>
             </div>
           </div>
-          <Modal title="Пропуски по заданным параметрам" open={absenteeismsModalOpen} onCancel={handleAbsenteeismsModalCancel}>
-            
+          <Modal title="Пропуски по заданным параметрам" open={absenteeismsModalOpen} onCancel={handleAbsenteeismsModalCancel} footer={false} width={1000}>
+            <div className="modal-body">
+            {loadingAbsenteeismsByFilter ? <Skeleton /> : absenteeismsByFilter.map(absenteeism => {
+              return (
+                <Dropdown 
+                  menu={{
+                  items: [{ 
+                    key: 1, 
+                    label: (
+                    <a>
+                      Отметить как уважительный
+                    </a>
+                    ),
+                    icon: <CheckOutlined />,
+                    disabled: absenteeism.type == 1,
+                    onClick: () => {handleFilteredAbsenteeisms("positive", absenteeism)}},
+                    {key: 2, 
+                    label: (
+                      <a>
+                      Отметить как неуважительный
+                    </a>
+                    ),
+                    icon : <CloseOutlined />,
+                    disabled: absenteeism.type == 0, 
+                    onClick: () => {handleFilteredAbsenteeisms("negative", absenteeism)}},
+                    {key: 3, label: (
+                      <Popconfirm title="Удалить пропуск" description="Вы уверены что хотите удалить данный пропуск?" okText="Да" cancelText="Нет" onConfirm={() => handleFilteredAbsenteeisms("delete", absenteeism)}>
+                        <a>
+                          Удалить пропуск
+                        </a>
+                      </Popconfirm>
+                    ),
+                    icon: <DeleteOutlined/>, 
+                    danger: true}],}} 
+                    trigger={['contextMenu']}>
+                  <div className="absenteeism-item">
+                    <span className={"absenteeism-hours-number " + (absenteeism.type == 0 ? "negative-hours-batch" : "positive-hours-batch")}>
+                      {absenteeism.hoursNumber}
+                    </span>
+                    <span className="absenteeism-subject-title">
+                      {absenteeism.subject.title}
+                    </span>
+                    <span className="absenteeism-item-date">
+                      {moment(new Date(+absenteeism.date)).format("L")}
+                    </span>
+                </div>
+                </Dropdown>)
+            })}
+            </div>
           </Modal>
       </div>
     );
