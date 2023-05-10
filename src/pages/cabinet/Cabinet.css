@@ -1,0 +1,53 @@
+.main {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.login-block {
+    width: 600px;
+    margin: 20px auto 0 auto;
+}
+
+.default-block {
+    padding: 15px;
+    box-shadow: 15px 15px 20px 0px rgba(0,0,0,0.1);
+    background-color: #f5f5f5;
+    border-radius: 18px;
+}
+
+.section-info-badge {
+    background-color: #b05500;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+.forgot-password {
+    display: block;
+    width: fit-content;
+    margin-top: 8px !important;
+    margin: 0 auto;
+}
+.forgot-password:hover {
+    cursor: pointer;
+}
+.other-actions {
+    width: 100%;
+}
+.new-user-button {
+    width: 100%;
+}
+.login-button {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 8px;
+    color: white;
+    background-color: #b05500;
+}
+
+label {
+    margin-top: 8px !important;
+    margin-left: 8px !important;
+}

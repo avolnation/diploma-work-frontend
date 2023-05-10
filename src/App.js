@@ -11,6 +11,7 @@ import { useEffect, useState, useForm } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed } from './redux/reducers/groupsSlice';
 
+import Cabinet from './pages/cabinet/Cabinet';
 import Groups from './pages/groups/Groups';
 import Group from './pages/group/Group';
 import StudentPage from './pages/student-page/StudentPage';
@@ -106,6 +107,7 @@ const App = () => {
             </Route>
             <Route path="/student/:studentId" render={(props) => <StudentPage {...props}/>}/>
             <Route path="/group/:groupId" render={(props) => <Group {...props}/>}/>
+            <Route path="/cabinet" render={(props) => <Cabinet {...props}/>}/>
             <Route path="/groups">
               <Groups/>
             </Route>
