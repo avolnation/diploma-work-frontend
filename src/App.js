@@ -10,6 +10,7 @@ import {
 import { useEffect, useState, useForm } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed } from './redux/reducers/groupsSlice';
+import { setLoadingUser, setToken, setData } from './redux/reducers/userSlice';
 
 import Cabinet from './pages/cabinet/Cabinet';
 import Groups from './pages/groups/Groups';
@@ -20,13 +21,40 @@ import ScheduleByGroup from './pages/schedule-by-group/ScheduleByGroup';
 
 const App = () => {
 
+  const profile = useSelector(state => state.user)
+
   const dispatch = useDispatch()
 
   const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 
   useEffect(() => {
     apiFetch('get-all-groups');
+    
+    if(document.cookie){
+      const tokenCookie = getCookie('token')
+      if(tokenCookie !== undefined){
+        fetch(`${API_BASE_URL}users/login?token=${tokenCookie}`)
+        .then(result => result.json())
+        .then(result => {
+          dispatch(setToken(result.token));
+          dispatch(setData(result.userdata));
+          dispatch(setLoadingUser(false));
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+    }
   }, [])
+
+  const getCookie = (cookieName) => {
+    const cookie = {}
+    document.cookie.split(';').forEach(el=> {
+    let [key, value] = el.split('=')
+    cookie[key.trim()] = value;    
+    })
+  return cookie[cookieName]
+  }
 
   const apiFetch = (req) => {
     switch(req){
@@ -47,18 +75,6 @@ const App = () => {
             
         })
         break;
-        // case 'get-subjects-by-group-id':
-        //     fetch(API_URL + "/subjects/get-subjects-by-group/" + props.match.params.groupId)
-        //     .then(result => result.json())
-        //     .then(result => {
-        //         let subjectsToSet = result.subjects.map(el => {
-        //             return {
-        //                 value: el._id,
-        //                 label: `${el.title} (${el.abbreviature})`
-        //             }
-        //         })
-        //         dispatch(setGroupForSubjects(subjectsToSet))
-        //     })
     }
 }
   return (
