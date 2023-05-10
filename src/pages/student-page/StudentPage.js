@@ -142,7 +142,7 @@ const Groups = (props) =>{
                   <div className="student-info-section-badge"> <UserOutlined /> Общая информация о студенте</div>
                   <div className="student-info-section-info">
                     { loadingStudent ?
-                    <LoadingOutlined/> : 
+                    <Skeleton/> : 
                     <>
                       <span className="student-info-section-text">
                         <span className="title">ФИО: </span> 
@@ -196,7 +196,7 @@ const Groups = (props) =>{
             <div className="student-info-absenteeism-section default-block">
                 <div className="student-info-section-badge"> <InfoCircleOutlined /> Информация о пропусках студента по предметам</div>
             <div>
-                  {loadingAbsenteeisms ? <LoadingOutlined/> : absenteeisms.map(absenteeism => {
+                  {loadingAbsenteeisms ? <Skeleton/> : absenteeisms.map(absenteeism => {
                     return <div key={absenteeism._id} className="student-info-absenteeism-section-item">
                       <span>{absenteeism._id}</span>
                       <span><span><Tooltip title="Уважительные">{absenteeism.posHoursSum}</Tooltip></span><Tooltip title="Неуважительные"> | <span>{absenteeism.negHoursSum}</span></Tooltip> </span>

@@ -2,8 +2,9 @@ import "../../App.css"
 import "./Group.css"
 
 import { useEffect, useState, useForm } from "react";
-import { Tooltip, Dropdown, message } from "antd";
+import { Skeleton, Tooltip, Dropdown, message } from "antd";
 import { CheckOutlined, ClockCircleOutlined, FrownOutlined, InfoOutlined, TeamOutlined, LoadingOutlined, CloseOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Link } from "react-router-dom";
 
 const Group = (props) => {
 
@@ -79,6 +80,7 @@ const Group = (props) => {
           setStudents(mappedStudents);
 
           setLoadingStudents(false);
+
     }) 
   })
 
@@ -240,7 +242,7 @@ const Group = (props) => {
                 <div style={{"margin": "0 auto 1% auto", "width": "fit-content"}}>Занятия сейчас нет</div>
                 <img className="image-placeholder" src="https://em-content.zobj.net/thumbs/120/apple/354/partying-face_1f973.png"/>  
               </>
-              : <LoadingOutlined style={{"display": "block", "fontSize": "75px", "margin": "0 auto"}}/>}
+              : <Skeleton />}
               </div>
             </div>
             <div id="group-info-students-all-block" className="default-block">
@@ -250,14 +252,14 @@ const Group = (props) => {
               </div>
               <input type="text" placeholder="Введите имя или фамилию студента..." onChange={(e) => setSearchStudentInput(e.target.value)}/>
               <div id="group-info-students-block-students">
-                {loadingStudents ? <LoadingOutlined style={{"display": "block", "fontSize": "75px", "margin": "0 auto"}}/> : 
+                {loadingStudents ? <Skeleton active/> : 
                   students && filterStudentsHandler().map(student => {
                   return (
                       <Dropdown menu={{items: [{ key: 1, 
                         label: (
-                        <a>
+                        <Link to={`/student/${student._id}`}>
                           Страница студента
-                        </a>
+                        </Link>
                         ),
                         icon: <InfoOutlined />},
                         {key: 2, 
