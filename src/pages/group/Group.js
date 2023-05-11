@@ -10,8 +10,9 @@ const Group = (props) => {
 
     const API_BASE_URL = process.env.REACT_APP_BASE_URL;
     const groupId = props.match.params.groupId;
-    const timeNow = 1682943900000;
+    // const timeNow = 1682943900000;
     // const timeNow = 1680518460000;
+    const timeNow = new Date().getTime();
 
     const [ students, setStudents ] = useState([])
     const [ pairInfo, setPairInfo ] = useState({})
@@ -252,7 +253,11 @@ const Group = (props) => {
               </div>
               <input type="text" placeholder="Введите имя или фамилию студента..." onChange={(e) => setSearchStudentInput(e.target.value)}/>
               <div id="group-info-students-block-students">
-                {loadingStudents ? <Skeleton active/> : 
+                {loadingStudents ? [1,2,3,4,5,6].map(element => {
+                   return (
+                    <Skeleton.Button className="group-info-student-block-item"/>
+                  )
+                }) : 
                   students && filterStudentsHandler().map(student => {
                   return (
                       <Dropdown menu={{items: [{ key: 1, 

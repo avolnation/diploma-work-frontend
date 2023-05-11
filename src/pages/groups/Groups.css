@@ -1,19 +1,91 @@
-#groups-info-left-block{
-    display: inline-block;
-    max-width: 40%;
+.groups-page {
+    display: flex;
+    margin-top: 14px;
+    max-width: 1400px;
 }
-#groups-info-right-block{
+
+.groups-page-left-block {
     display: inline-block;
-    max-width: 60%;
+    max-width: 30%;
+    margin-right: 8px;
 }
-.groups-info-right-block-item{
+
+.groups-page-right-block {
     display: inline-block;
-    font-size: 1.5rem;
-    padding: 10px 20px;
-    background-color:blanchedalmond;
-    width: 100px;
+    width: 70%;
+}
+
+.groups-info-right-block-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    padding: 15px 20px;
+    background-color: #ececec;
     height: fit-content;
     text-align: center;
     border-radius: 5%;
-    margin-right: 10px;
+    gap: 5px;
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+}
+
+.groups-page-add-group {
+    display: block;
+    background: #ececec;
+    padding: 10px;
+    border-radius: 5px;
+    /* width: 80%; */
+    margin: 0 auto;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.groups-page-groups {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    flex-direction: column;
+}
+
+.groups-page-section-badge {
+    font-size: 19px;
+    font-weight: 600;
+    background-color: #b05500;
+    color: #ffffff;
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.page-description {
+    font-size: 16px;
+}
+
+.default-block {
+    padding: 15px;
+    box-shadow: 15px 15px 20px 0px rgba(0, 0, 0, 0.1);
+    background-color: #f5f5f5;
+    border-radius: 18px;
+}
+
+.groups-info-right-block-item-schedule {
+    padding: 8px 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #b05500;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.groups-info-right-block-item-group-page {
+    padding: 8px 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #b05500;
+    border-radius: 10px;
+    font-size: 14px;
 }

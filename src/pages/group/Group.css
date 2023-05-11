@@ -41,16 +41,20 @@
 
 .group-info-student-block-item {
     display: flex;
-    width: 150px;
+    width: 150px !important;
     min-height: 40px;
     background-color: #ececec;
     border-radius: 10px;
-    box-shadow: 0px 5px 0px #498467;
+    /* box-shadow: 0px 5px 0px #498467; */
     padding: 1% 1%;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
     position: relative;
+}
+
+.group-info-student-block-item span.ant-skeleton-button {
+    width: 99% !important;
 }
 
 .group-info-student-block-item:hover {

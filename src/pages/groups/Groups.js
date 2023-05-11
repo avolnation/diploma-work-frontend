@@ -11,6 +11,7 @@ import {
 
 import { useEffect, useState, useForm } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { PlusCircleOutlined } from "@ant-design/icons";
 
 const Groups = (props) =>{
 
@@ -18,16 +19,35 @@ const Groups = (props) =>{
 
     return (
       <div className="App">
-          <div id="groups-info">
-            <span id="groups-info-left-block">Выберите группу из предложенных чтобы просмотреть студентов которые сейчас в университете а так же другую информацию.</span>
-            <span id="groups-info-right-block">
-                <span className="groups-info-right-block-item">[+]</span>
-                <>
+          <div className="groups-page">
+            <div className="groups-page-left-block default-block">
+              <div className="groups-page-section-badge"> Информация </div>
+              <span className="page-description">
+                Выберите группу из предложенных чтобы просмотреть студентов которые сейчас в университете а так же другую информацию.
+              </span>
+            </div>
+            <div className="groups-page-right-block default-block">
+              <div className="groups-page-section-badge"> Группы </div>
+                <div className="groups-page-add-group"> Добавить группу</div>
+                <div className="groups-page-groups">
                   {groupsFromRedux && groupsFromRedux.map((group) => {
-                    return (<Link to={`/group/${group.value}`} className="groups-info-right-block-item">{group.label}</Link>)
+                    return (
+                    <div className="groups-info-right-block-item">
+                      <span>
+                        {group.label}
+                      </span> 
+                      <div>
+                      <Link to={`/schedule-by-group/${group.value}`} className="groups-info-right-block-item-schedule">
+                        Расписание
+                        </Link> 
+                        <Link to={`/group/${group.value}`} className="groups-info-right-block-item-group-page">
+                          К группе
+                        </Link>
+                      </div>
+                    </div>)
                   })}
-                </>
-            </span>
+                </div>
+            </div>
           </div>
       </div>
     );
