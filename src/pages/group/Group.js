@@ -10,9 +10,9 @@ const Group = (props) => {
 
     const API_BASE_URL = process.env.REACT_APP_BASE_URL;
     const groupId = props.match.params.groupId;
-    // const timeNow = 1682943900000;
+    const timeNow = 1682943900000;
     // const timeNow = 1680518460000;
-    const timeNow = new Date().getTime();
+    // const timeNow = new Date().getTime();
 
     const [ students, setStudents ] = useState([])
     const [ pairInfo, setPairInfo ] = useState({})
@@ -42,9 +42,10 @@ const Group = (props) => {
         
         fetch(`${API_BASE_URL}schedule?pairNumber=${pairData.pairNumber}&dayOfTheWeek=${pairData.dayOfTheWeek}&group=${groupId}`)
         .then(response => response.json())
-        .then(pairData => {
-          setPairNow(pairData.pairs)
+        .then(pairs => {
+          setPairNow(pairs.pairs)
           setLoadingPairInfo(false)
+          recentUpdatesHandler(pairs.pairs, pairData.weekParity, pairData.pairEnds, pairData.pairStarts)
         })
       })
     })
@@ -84,6 +85,34 @@ const Group = (props) => {
 
     }) 
   })
+  }
+
+    const recentUpdatesHandler = (pairs, weekParity, lte, gte) => {
+      const subgroups = [];
+
+      const filteredPairs = pairs.filter(pair => pair.weekParity == weekParity)
+
+      console.log(filteredPairs);
+
+      filteredPairs.forEach(pair => {
+        if(!(subgroups.includes(pair.subgroup))){
+          subgroups.push(pair.subgroup);
+        }
+      })
+
+      let paramsString = filteredPairs.map((pair, index) => {
+        return `subject[${index}]=${pair.subject._id}&`
+      }).join("")
+
+      paramsString = paramsString.slice(0, -1)
+
+      fetch(`${API_BASE_URL}attend?${paramsString}&lte=${lte}&gte=${gte}`)
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+      })
+
+      // console.log(subgroups)
 
 
     }
@@ -302,6 +331,12 @@ const Group = (props) => {
                     <InfoCircleOutlined />
                     <span>Недавние действия</span>
                   </span>
+                  <div>
+
+                  </div>
+                </div>
+                <div className="group-info-recent-updates">
+
                 </div>
             </div>
           </div>

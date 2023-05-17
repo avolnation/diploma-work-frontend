@@ -266,7 +266,7 @@ const ScheduleDivider = (props) => {
                         <>  
                             <div className="each-pair-section">
                             <Tooltip title="Номер пары">
-                                <Tag icon color="#4096ff" style={{"marginLeft": "10px"}}>
+                                <Tag icon color="#b05500" style={{"marginLeft": "10px"}}>
                                     {index + 1}
                                 </Tag>
                             </Tooltip>

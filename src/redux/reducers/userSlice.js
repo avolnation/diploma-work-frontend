@@ -4,6 +4,7 @@ import {
 
 const initialState = {
     loading: true,
+    authenticated: false,
     token: '',
     data: {}
 }
@@ -18,6 +19,9 @@ const userSlice = createSlice({
         setToken: (state, action) => {
             state.token = action.payload;
         },
+        setAuthenticated: (state, action) => {
+            state.authenticated = action.payload;
+        },
         setData: (state, action) => {
             state.data = action.payload;
         }
@@ -27,6 +31,7 @@ const userSlice = createSlice({
 export const {
     setLoadingUser,
     setToken,
+    setAuthenticated,
     setData
 } = userSlice.actions
 export default userSlice.reducer

@@ -38,8 +38,8 @@
     vertical-align: middle;
 }
 .schedule-one-button:hover{
-    color: #4096ff;
-    border: 2px solid #4096ff;
+    color: #b05500;
+    border: 2px solid #b05500;
     cursor: pointer;
 }
 .schedule-two-buttons {
@@ -49,8 +49,8 @@
     text-align: center;
 }
 .schedule-two-buttons:hover{
-    color: #4096ff;
-    border: 2px solid #4096ff;
+    color: #b05500;
+    border: 2px solid #b05500;
     cursor: pointer;
 }
 .schedule-pair-buttons {
@@ -87,8 +87,8 @@
     border-bottom-left-radius: 10px;
 }
 .schedule-pair-buttons:hover {
-    color: #4096ff;
-    border: 2px solid #4096ff;
+    color: #b05500;
+    border: 2px solid #b05500;
     cursor: pointer;
 }
 .ant-tabs-tabpane {
@@ -96,4 +96,16 @@
 }
 .ant-tag {
     font-size: 12px;
+}
+.ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #b05500 !important;
+}
+.ant-tabs .ant-tabs-tab:hover {
+    color: #b05500 !important;
+}
+.ant-tabs-ink-bar {
+    background-color: #b05500 !important;
+}
+.pin_block {
+    margin: 0 auto;
 }
