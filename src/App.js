@@ -33,7 +33,7 @@ const App = () => {
     if(document.cookie){
       const tokenCookie = getCookie('token')
       if(tokenCookie !== undefined){
-        fetch(`${API_BASE_URL}users/login?token=${tokenCookie}`)
+        fetch(`${API_BASE_URL}users?token=${tokenCookie}&method=login-by-token`)
         .then(result => result.json())
         .then(result => {
           dispatch(setToken(result.token));
@@ -66,7 +66,7 @@ const App = () => {
   const apiFetch = (req) => {
     switch(req){
         case 'get-all-groups': 
-        fetch(`${API_BASE_URL}groups/get-all-groups`)
+        fetch(`${API_BASE_URL}groups`)
         .then(result => result.json())
         .then(result => {
             let groupsToSet = result.groups.map(el => {
@@ -76,6 +76,7 @@ const App = () => {
                 }
             })
             dispatch(fetchGroupsFromApiSucceed(groupsToSet));
+            dispatch(setLoadingGroups(false));
         })
         .catch(err => {
             console.log(err);

@@ -2,17 +2,17 @@
   font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.App{
+.App {
   margin: 0 auto;
   padding: 0 20px;
   max-width: 1400px;
   width: 100%;
 }
 
-#header{
+#header {
   margin: 0;
   background: #ffffff;
-  box-shadow: 0px 15px 15px -3px rgba(0,0,0,0.1);
+  box-shadow: 0px 15px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 #header ul {
@@ -65,4 +65,95 @@
 #header .logo svg {
   width: 150px;
   height: auto;
+}
+
+.filter-field {
+  box-sizing: border-box;
+  display: block;
+  margin: 0 auto;
+  border: none;
+  border-radius: 15px;
+  background-color: #ececec;
+  width: 100%;
+  min-height: 35px;
+  margin-bottom: 1%;
+  text-indent: 2%;
+}
+
+.filter-field:focus {
+  outline: none;
+}
+
+.filter-field:disabled {
+  cursor: not-allowed;
+}
+
+.default-block {
+  padding: 15px;
+  box-shadow: 15px 15px 20px 0px rgba(0,0,0,0.1);
+  background-color: #f5f5f5;
+  border-radius: 18px;
+}
+
+.section-badge {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  font-size: 19px;
+  font-weight: 600;
+  background-color: #b05500;
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+.section-badge span {
+  padding-left: 5px;
+}
+
+.action-btn {
+  margin-top: 8px;
+  width: 100%;
+  height: fit-content;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 0;
+  color: white;
+  background-color: #b05500;
+}
+.action-btn:hover {
+    color: white !important;
+    opacity: 80%;
+    border-color: unset !important;
+}
+
+.form-input:hover {
+  border-color: #b05500 !important;
+}
+
+.form-input:focus {
+  border-color: #b05500 !important;
+}
+
+.create-btn {
+  background-color: #60993ed1;
+  color: #FFF;
+  border-color: #60993ed1 !important;
+  margin-bottom: 8px;
+  width: 100%;
+  height: fit-content;
+  font-size: 16px;
+  padding: 8px 0;
+  border: none;
+}
+.create-btn:hover {
+  opacity: 80%;
+  color: #FFF !important;
+  border-color: #60993ed1 !important;
+}
+.ant-select-item-option-active.ant-select-item-option-selected {
+  background-color: #b055009c !important;
+  color: #FFF !important;
 }

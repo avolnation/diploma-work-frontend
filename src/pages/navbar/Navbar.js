@@ -38,7 +38,7 @@ const Navbar = (props) => {
 
     const loginHandler = () => {
         const loginQuery = new URLSearchParams(loginForm.getFieldsValue()).toString();
-        fetch(`${API_BASE_URL}users/login?${loginQuery}`)
+        fetch(`${API_BASE_URL}users?${loginQuery}&method=login`)
         .then(result => result.json())
         .then(result => {
             result.status == "success" 
@@ -48,7 +48,8 @@ const Navbar = (props) => {
             message.error({content: result.message, duration: 2, style: {marginTop: '5vh',}});
 
             if(result.status === 'success'){
-                document.cookie = `token=${result.token}; path=/; max-age=3600`
+                document.cookie = `token=${result.token}; path=/; max-age=2628000`
+                setAuthorizationModalVisibility(false);
                 loginForm.resetFields()
                 setTimeout(() => window.location.reload(), 1000)
             }
@@ -56,10 +57,10 @@ const Navbar = (props) => {
     }
 
     const registerHandler = () => {
-        fetch(`${API_BASE_URL}users/register`, {
+        fetch(`${API_BASE_URL}users`, {
             method: "POST", 
             headers: {"Content-Type": "application/json"}, 
-            body: JSON.stringify(registerForm.getFieldsValue())
+            body: JSON.stringify({...registerForm.getFieldsValue(), method: "new-user"})
         })
         .then(result => result.json())
         .then(result => {
@@ -75,7 +76,7 @@ const Navbar = (props) => {
 
         setTempLoginField(form.login);
 
-        fetch(`${API_BASE_URL}users/forgot-password?login=${form.login}`)
+        fetch(`${API_BASE_URL}users?login=${form.login}&method=forgot-password`)
         .then(response => response.json())
         .then(response => {
             if(response.status == "success"){
@@ -93,7 +94,7 @@ const Navbar = (props) => {
     const checkResetTokenHandler = (e) => {
         if(e.length == 6){
             setTempResetTokenField(e);
-            fetch(`${API_BASE_URL}users/forgot-password?login=${tempLoginField}&resetToken=${e}`)
+            fetch(`${API_BASE_URL}users?login=${tempLoginField}&resetToken=${e}&method=reset-token-confirmation`)
             .then(response => response.json())
             .then(response => {
                 if(response.status == "success"){
@@ -110,8 +111,23 @@ const Navbar = (props) => {
         }
     }
 
-    const newPasswordHandler = () => {
+    const newPasswordHandler = (form) => {
 
+        fetch(`${API_BASE_URL}users`, 
+        {method: "POST", 
+        headers: {"Content-Type": "application/json"}, 
+        body: JSON.stringify({login: tempLoginField, password: form.password, resetToken: tempResetTokenField, method: "new-password"})})
+        .then(response => response.json())
+        .then(response => {
+            if(response.status == "success"){
+                message.success({content: response.message, duration: 2, style: {marginTop: '5vh',}});
+                setNewPasswordModalVisibility(false);
+                newPasswordForm.resetFields();
+            }
+            else {
+                message.error({content: response.message, duration: 2, style: {marginTop: '5vh',}});
+            }
+        })
     
     }
 
@@ -145,9 +161,9 @@ const Navbar = (props) => {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/schedule-by-group">
+                        {/* <Link to="/schedule-by-group">
                             Расписание групп
-                        </Link>
+                        </Link> */}
                     </li>
                     <li>
                         <Dropdown menu={{items: profile.authenticated ? 
@@ -242,7 +258,7 @@ const Navbar = (props) => {
             <h2>Восстановление доступа</h2>
             <h3 style={{"color": "#949494"}}>Введите новый пароль</h3>
             <Divider />
-            <Form layout='vertical' form={newPasswordForm} onFinish={() => newPasswordHandler()}>
+            <Form layout='vertical' form={newPasswordForm} onFinish={(form) => newPasswordHandler(form)}>
                 <Form.Item name="password" label="Новый пароль">
                     <Input.Password required/>
                 </Form.Item>

@@ -3,7 +3,7 @@ import {
 } from "@reduxjs/toolkit";
 
 const initialState = {
-    loading: false,
+    loading: true,
     groups: [],
     error: ''
 }
@@ -12,12 +12,12 @@ const groupsSlice = createSlice({
     name: "groups",
     initialState,
     reducers: { // TODO: Когда буду делать обработку ошибок вернуться сюда
-        setLoadingGroups: (state) => {
-            state.loading = true;
+        setLoadingGroups: (state, action) => {
+            state.loading = action.payload;
         },
         fetchGroupsFromApiSucceed: (state, action) => {
             state.groups = action.payload;
-            state.loading = false;
+            // state.loading = false;
         }, // TODO: Когда приведу в порядок API, тогда вернусь к выводу и сохранению ошибок!!!
         fetchGroupsFromApiFailed: (state, action) => {
             state.error = action.payload;

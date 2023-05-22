@@ -139,7 +139,7 @@ const Groups = (props) =>{
           <div className="student-info">
             <div className="student-info-filter-and-info-block">
               <div className="student-info-about-student-section default-block">
-                  <div className="student-info-section-badge"> <UserOutlined /> Общая информация о студенте</div>
+                  <div className="section-badge"> <UserOutlined /> <span>Общая информация о студенте</span></div>
                   <div className="student-info-section-info">
                     { loadingStudent ?
                     <Skeleton/> : 
@@ -164,7 +164,7 @@ const Groups = (props) =>{
                   </div>
               </div>
               <div className="student-info-filter-absenteeisms default-block">
-                <div className="student-info-section-badge"> <SearchOutlined /> Поиск пропусков по фильтрам</div>
+                <div className="section-badge"> <SearchOutlined /> <span>Поиск пропусков по фильтрам</span></div>
                       <Radio.Group onChange={(e) => setRadioValue(e.target.value)} value={radioValue} style={{"marginTop": "8px", "marginBottom": "8px"}}>
                         <Radio value={1}>
                           По дню
@@ -189,12 +189,12 @@ const Groups = (props) =>{
                                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                         } options={absenteeismsForSelect} placeholder="Выберите предмет" style={{"width": "80%", "marginTop": "8px"}}/>
                         </Form.Item>
-                        <Button htmlType="submit" style={{"marginTop": "8px"}}><SearchOutlined/>Поиск</Button>
+                        <Button htmlType="submit" className="student-page-find-button" style={{"marginTop": "8px"}}><SearchOutlined/>Поиск</Button>
                       </Form>
               </div>
             </div>
             <div className="student-info-absenteeism-section default-block">
-                <div className="student-info-section-badge"> <InfoCircleOutlined /> Информация о пропусках студента по предметам</div>
+                <div className="section-badge"> <InfoCircleOutlined /> <span>Информация о пропусках студента по предметам</span></div>
             <div>
                   {loadingAbsenteeisms ? <Skeleton/> : absenteeisms.map(absenteeism => {
                     return <div key={absenteeism._id} className="student-info-absenteeism-section-item">
@@ -207,7 +207,7 @@ const Groups = (props) =>{
           </div>
           <Modal title="Пропуски по заданным параметрам" open={absenteeismsModalOpen} onCancel={handleAbsenteeismsModalCancel} footer={false} width={1000}>
             <div className="modal-body">
-            {loadingAbsenteeismsByFilter ? <Skeleton /> : absenteeismsByFilter.map(absenteeism => {
+            {loadingAbsenteeismsByFilter ? <Skeleton /> : absenteeismsByFilter.length > 0 ? absenteeismsByFilter.map(absenteeism => {
               return (
                 <Dropdown 
                   menu={{
@@ -252,7 +252,14 @@ const Groups = (props) =>{
                     </span>
                 </div>
                 </Dropdown>)
-            })}
+            }) 
+            : 
+            <>
+            <img style={{"width": "30% !important"}} className="no-absenteeisms-found" src="../no-data-found.svg"/>
+            <span className="group-page-description">
+              Пропусков занятий по заданным параметрам не найдено. 
+            </span>
+            </>}
             </div>
           </Modal>
       </div>

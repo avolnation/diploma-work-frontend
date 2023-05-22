@@ -23,23 +23,11 @@
     background-color: #ececec;
     height: fit-content;
     text-align: center;
-    border-radius: 5%;
+    border-radius: 5px;
     gap: 5px;
     text-decoration: none;
     color: black;
     font-weight: normal;
-}
-
-.groups-page-add-group {
-    display: block;
-    background: #ececec;
-    padding: 10px;
-    border-radius: 5px;
-    /* width: 80%; */
-    margin: 0 auto;
-    text-align: center;
-    font-size: 16px;
-    margin-bottom: 10px;
 }
 
 .groups-page-groups {
@@ -64,13 +52,6 @@
     font-size: 16px;
 }
 
-.default-block {
-    padding: 15px;
-    box-shadow: 15px 15px 20px 0px rgba(0, 0, 0, 0.1);
-    background-color: #f5f5f5;
-    border-radius: 18px;
-}
-
 .groups-info-right-block-item-schedule {
     padding: 8px 10px;
     text-decoration: none;
@@ -88,4 +69,51 @@
     background-color: #b05500;
     border-radius: 10px;
     font-size: 14px;
+}
+
+.groups-page-left-block img {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.groups-page-left-block .page-description {
+    margin-top: 15px;
+    display: inline-block;
+    width: 100%;
+    text-align: justify;
+    font-size: 16px;
+}
+
+.groups-info-right-block-item-skeleton {
+    box-sizing: border-box;
+    display: flex;
+    padding: 15px 20px;
+    border-radius: 5px;
+    width: 100%;
+    background-color: #ececec;
+    gap: 8px;
+}
+
+.groups-info-right-block-item-button {
+    width: 100px !important;
+}
+
+.groups-info-right-block-skeleton-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    /* padding: 15px 20px; */
+    background-color: #ececec;
+    height: fit-content;
+    text-align: center;
+    border-radius: 5px;
+    gap: 5px;
+    text-decoration: none;
+    color: black;
+    font-weight: normal;
+}
+
+.groups-info-right-block-item-info {
+    width: 100% !important;
 }
