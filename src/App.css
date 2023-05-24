@@ -157,3 +157,12 @@
   background-color: #b055009c !important;
   color: #FFF !important;
 }
+.ant-tabs .ant-tabs-tab {
+  background: #b05500;
+  color: #FFFFFF;
+  border-radius: 14px;
+  padding: 4px 11px;
+  height: 44px;
+  font-weight: 700;
+  transition: .2s all; 
+}
