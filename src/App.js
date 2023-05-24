@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed } from './redux/reducers/groupsSlice';
 import { setLoadingUser, setToken, setAuthenticated, setData } from './redux/reducers/userSlice';
 
+import Main from './pages/main/Main'
 import Navbar from './pages/navbar/Navbar'
 import Cabinet from './pages/cabinet/Cabinet';
 import Groups from './pages/groups/Groups';
@@ -104,10 +105,7 @@ const App = () => {
             <Route path="/groups">
               <Groups/>
             </Route>
-            <Route path="/">
-              <div className="App"> 
-              </div>
-            </Route>
+            <Route path="/" render={(props) => <Main {...props}/>}/>
           </Switch>
       </BrowserRouter>
   );
