@@ -64,11 +64,14 @@ const Navbar = (props) => {
         })
         .then(result => result.json())
         .then(result => {
-            result.status == "success" 
-            ? 
-            message.success({content: result.message, duration: 2, style: {marginTop: '5vh',}}) 
-            : 
-            message.error({content: result.message, duration: 2, style: {marginTop: '5vh',}});
+            if(result.status == "success"){
+                message.success({content: result.message, duration: 2, style: {marginTop: '5vh',}}) 
+                setRegistrationModalVisibility(false);
+                registerForm.resetFields();
+            }
+            else {
+                message.error({content: result.message, duration: 2, style: {marginTop: '5vh',}});
+            }
         })
     }
 

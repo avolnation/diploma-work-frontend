@@ -98,7 +98,7 @@ const App = () => {
             </Route>
             <Route path="/student/:studentId" render={(props) => <StudentPage {...props}/>}/>
             <Route path="/group/:groupId" render={(props) => <Group {...props}/>}/>
-            <Route path="/cabinet" render={(props) => <Cabinet {...props}/>}/>
+            <Route path="/profile" render={(props) => <Cabinet {...props} getCookie={getCookie}/>}/>
             <Route path="/groups">
               <Groups/>
             </Route>

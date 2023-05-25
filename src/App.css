@@ -129,6 +129,22 @@
     border-color: unset !important;
 }
 
+.form-action-btn {
+  margin-top: 8px;
+  height: fit-content;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 8px 15px;
+  color: white;
+  background-color: #b05500;
+}
+
+.form-action-btn:hover {
+  color: white !important;
+  opacity: 80%;
+  border-color: unset !important;
+}
+
 .form-input:hover {
   border-color: #b05500 !important;
 }

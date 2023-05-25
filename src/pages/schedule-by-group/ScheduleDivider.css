@@ -91,17 +91,21 @@
     border: 2px solid #b05500;
     cursor: pointer;
 }
-.ant-tabs-tabpane {
+/* .ant-tabs-tabpane {
     width: 1000px;
-}
+} */
 .ant-tag {
     font-size: 12px;
 }
 .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #b05500 !important;
+    color: #FFF !important;
 }
 .ant-tabs .ant-tabs-tab:hover {
-    color: #b05500 !important;
+    color: #FFF !important;
+    opacity: 80%;
+}
+.ant-tabs-tab.ant-tabs-tab-active {
+    opacity: 70%;
 }
 .ant-tabs-ink-bar {
     background-color: #b05500 !important;
