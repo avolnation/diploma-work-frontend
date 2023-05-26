@@ -165,7 +165,7 @@ const ScheduleByGroup = (props) =>{
     return (
       <>
         <div className="App">
-          <div id="day-choose-block" style={{"display": "inline-block", "width": "30%", "height": "500px"}}>
+          <div id="day-choose-block" style={{"display": "inline-block", "width": "30%", "height": "500px", "marginTop": "16px"}}>
             <Tabs
               size="large"
               tabPosition="left"

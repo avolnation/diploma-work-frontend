@@ -204,7 +204,10 @@ const Cabinet = (props) => {
     return (
       <div className="App">
           <div className="cabinet-page-main-block default-block">
-            {!(profile.loading) 
+            {profile.loading 
+            ? <Skeleton />
+            :
+            profile.authenticated 
             ? 
             <>
             <div className="cabinet-page-left-block">
@@ -313,8 +316,8 @@ const Cabinet = (props) => {
               </span>
               <Link className="cabinet-to-main-page" to="/">На главную</Link>
             </div>
-            </>}
-            
+            </>
+            }    
           </div>
       </div>
     );

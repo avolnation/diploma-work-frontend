@@ -17,7 +17,7 @@
 }
 .pair-all-info {
     margin: 0 auto;
-    min-width: 100%;
+    min-width: 1000px;
     max-width: fit-content;
 }
 .each-pair-section {

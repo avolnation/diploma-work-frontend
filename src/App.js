@@ -47,6 +47,7 @@ const App = () => {
         })
       }
     }
+    dispatch(setLoadingUser(false));
   }, [])
 
   useEffect(() => {

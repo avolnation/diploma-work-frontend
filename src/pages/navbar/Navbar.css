@@ -25,6 +25,10 @@
 .new-user-button {
     width: 100%;
 }
+.new-user-button:hover {
+    color: #b05500 !important;
+    border-color: #b05500 !important;
+}
 
 .login-button {
     width: 100%;
@@ -34,6 +38,12 @@
     margin-top: 8px;
     color: white;
     background-color: #b05500;
+}
+
+.login-button:hover {
+    color: #FFF !important;
+    opacity: 80%;
+    border-color: unset !important;
 }
 
 label {
@@ -73,6 +83,11 @@ input::-webkit-inner-spin-button {
     color: white;
     background-color: #b05500;
 }
+.navbar-component.save-password-btn:hover {
+    color: #FFF !important;
+    opacity: 80%;
+    border-color: unset !important;
+}
 
 .navbar-component.proceed-btn {
     margin-top: 8px;
@@ -84,6 +99,13 @@ input::-webkit-inner-spin-button {
     color: white;
     background-color: #b05500;
 }
+
+.navbar-component.proceed-btn:hover {
+    color: #FFF !important;
+    opacity: 80%;
+    border-color: unset !important;
+}
+
 .navbar-component.back-to-authorization-modal-btn {
     margin-top: 8px;
     width: 100%;
@@ -93,4 +115,9 @@ input::-webkit-inner-spin-button {
     padding: 8px 0;
     color: white;
     background-color: #b05500;
+}
+.navbar-component.back-to-authorization-modal-btn:hover {
+    color: #FFF !important;
+    opacity: 80%;
+    border-color: unset !important;
 }

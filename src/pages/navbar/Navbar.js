@@ -171,7 +171,9 @@ const Navbar = (props) => {
                     <li>
                         <Dropdown menu={{items: profile.authenticated ? 
                         [{ key: 1, 
-                            label: "Добрый день, " + profile.data?.name,
+                            label: (
+                                <Link to="../profile">{"Добрый день, " + profile.data?.name}</Link>
+                            ),
                             icon: <UserOutlined />,
                         },
                         {key: 2, 
@@ -192,7 +194,7 @@ const Navbar = (props) => {
                         ,}
                         } trigger={['click']} arrow>
                             <Link>
-                            Личный кабинет
+                            Профиль
                             </Link>
                         </Dropdown>
                     </li>
@@ -223,15 +225,15 @@ const Navbar = (props) => {
                 <Alert style={{"textAlign": "center"}} message="Внимание! Во избежание путаницы, регистрироваться самому не рекомендуется!" type="warning"/>
                 <Form layout="vertical" form={registerForm} onFinish={() => registerHandler()}>
                     <Form.Item name="name" label="Имя">
+                        <Input className="form-input" required/>
+                    </Form.Item>
+                    <Form.Item className="form-input" name="surname" label="Фамилия">
                         <Input required/>
                     </Form.Item>
-                    <Form.Item name="surname" label="Фамилия">
+                    <Form.Item className="form-input" name="login" label="E-mail">
                         <Input required/>
                     </Form.Item>
-                    <Form.Item name="login" label="E-mail">
-                        <Input required/>
-                    </Form.Item>
-                    <Form.Item name="password" label="Пароль">
+                    <Form.Item className="form-input" name="password" label="Пароль">
                         <Input.Password required/>
                     </Form.Item>
                     <Button htmlType="submit" className="login-button">Регистрация</Button>
@@ -242,7 +244,7 @@ const Navbar = (props) => {
             <Divider/>
             <Form layout="vertical" form={emailForm} onFinish={(form) => emailFormHandler(form)}>
                 <Form.Item name="login" label="E-mail">
-                    <Input required placeholder='example@example.com'/>
+                    <Input className="form-input" required placeholder='example@example.com'/>
                 </Form.Item>
                 <Button className="navbar-component proceed-btn" htmlType='submit'>Продолжить</Button>
             </Form>
@@ -263,7 +265,7 @@ const Navbar = (props) => {
             <Divider />
             <Form layout='vertical' form={newPasswordForm} onFinish={(form) => newPasswordHandler(form)}>
                 <Form.Item name="password" label="Новый пароль">
-                    <Input.Password required/>
+                    <Input.Password className="form-input" required/>
                 </Form.Item>
                 <Button className="navbar-component save-password-btn" htmlType='submit'>Сохранить пароль</Button>
             </Form>
