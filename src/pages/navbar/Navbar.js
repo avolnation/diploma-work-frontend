@@ -203,13 +203,13 @@ const Navbar = (props) => {
             <Modal open={authorizationModalVisibility} onCancel={() => setAuthorizationModalVisibility(false)} footer={false} centered> 
                 <h2>Авторизация</h2>
                 <Divider/>
-                <Alert style={{"textAlign": "center"}} message="Внимание! Во избежание путаницы, регистрироваться самому не рекомендуется!" type="warning"/>
+                <Alert style={{"textAlign": "center"}} message="Внимание! Разницы между обычным и зарегистрированным пользователем нет. Регистрация для обычных пользователей необязательна." type="warning"/>
                 <Form layout="vertical" form={loginForm} onFinish={() => loginHandler()}>
                         <Form.Item name="login" label="E-mail">
-                            <Input/>
+                            <Input className="form-input" required/>
                         </Form.Item>
                         <Form.Item name="password" label="Пароль">
-                            <Input.Password/>
+                            <Input.Password className="form-input" required/>
                         </Form.Item>
                         <Button htmlType="submit" className="login-button">Войти</Button>
                 </Form>
@@ -222,19 +222,19 @@ const Navbar = (props) => {
             <Modal open={registrationModalVisibility} onCancel={() => setRegistrationModalVisibility(false)} footer={false} centered>
                 <h2>Регистрация</h2>
                 <Divider/>
-                <Alert style={{"textAlign": "center"}} message="Внимание! Во избежание путаницы, регистрироваться самому не рекомендуется!" type="warning"/>
+                <Alert style={{"textAlign": "center"}} message="Внимание! Разницы между обычным и зарегистрированным пользователем нет. Регистрация для обычных пользователей не обязательна." type="warning"/>
                 <Form layout="vertical" form={registerForm} onFinish={() => registerHandler()}>
                     <Form.Item name="name" label="Имя">
                         <Input className="form-input" required/>
                     </Form.Item>
-                    <Form.Item className="form-input" name="surname" label="Фамилия">
-                        <Input required/>
+                    <Form.Item name="surname" label="Фамилия">
+                        <Input className="form-input" required/>
                     </Form.Item>
-                    <Form.Item className="form-input" name="login" label="E-mail">
-                        <Input required/>
+                    <Form.Item name="login" label="E-mail">
+                        <Input className="form-input" required/>
                     </Form.Item>
-                    <Form.Item className="form-input" name="password" label="Пароль">
-                        <Input.Password required/>
+                    <Form.Item name="password" label="Пароль">
+                        <Input.Password className="form-input" required/>
                     </Form.Item>
                     <Button htmlType="submit" className="login-button">Регистрация</Button>
                 </Form>

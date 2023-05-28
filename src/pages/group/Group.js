@@ -34,9 +34,33 @@ const Group = (props) => {
     const [ loadingRecentUpdates, setLoadingRecentUpdates ] = useState(true);
     const [ recentUpdates, setRecentUpdates ] = useState([]);
 
+    // useEffect(() => {
+    //   console.log(students)
+    // }, [students])
+
+
     useEffect(() => {
-      console.log(students)
-    }, [students])
+      const interval = setInterval(() => {
+        fetch(`${API_BASE_URL}functions/pair-info-from-timestamp?timestamp=${timeNow}`)
+        .then(response => response.json())
+        .then(response => {
+          setPairInfo(response.info)
+          return response.info
+        })
+        .then((pairData) => {
+          fetch(`${API_BASE_URL}students?group=${groupId}`)
+          .then(data => data.json())
+          .then(students => {
+  
+          fetchStudentsWithAttendance(pairData);
+          recentUpdatesHandler(pairNow, pairData.weekParity, pairData.pairEnds, pairData.pairStarts);
+          
+        }) 
+      })
+      }, 20000);
+    
+      return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    }, [])
 
     useEffect(() => {
       fetch(`${API_BASE_URL}functions/pair-info-from-timestamp?timestamp=${timeNow}`)

@@ -34,17 +34,7 @@ const App = () => {
     if(document.cookie){
       const tokenCookie = getCookie('token')
       if(tokenCookie !== undefined){
-        fetch(`${API_BASE_URL}users?token=${tokenCookie}&method=login-by-token`)
-        .then(result => result.json())
-        .then(result => {
-          dispatch(setToken(result.token));
-          dispatch(setData(result.userdata));
-          dispatch(setLoadingUser(false));
-          dispatch(setAuthenticated(true));
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        fetchUserData(tokenCookie);
       }
     }
     dispatch(setLoadingUser(false));
@@ -55,6 +45,21 @@ const App = () => {
     apiFetch('get-all-groups');
     
   }, [])
+
+  const fetchUserData = (tokenCookie) => {
+    dispatch(setLoadingUser(true));
+    fetch(`${API_BASE_URL}users?token=${tokenCookie}&method=login-by-token`)
+    .then(result => result.json())
+    .then(result => {
+      dispatch(setToken(result.token));
+      dispatch(setData(result.userdata));
+      dispatch(setLoadingUser(false));
+      dispatch(setAuthenticated(true));
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 
   const getCookie = (cookieName) => {
     const cookie = {}
@@ -99,7 +104,7 @@ const App = () => {
             </Route>
             <Route path="/student/:studentId" render={(props) => <StudentPage {...props}/>}/>
             <Route path="/group/:groupId" render={(props) => <Group {...props}/>}/>
-            <Route path="/profile" render={(props) => <Cabinet {...props} getCookie={getCookie}/>}/>
+            <Route path="/profile" render={(props) => <Cabinet {...props} getCookie={getCookie} fetchUserData={fetchUserData}/>}/>
             <Route path="/groups">
               <Groups/>
             </Route>

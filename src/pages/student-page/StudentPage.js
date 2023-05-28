@@ -18,8 +18,6 @@ import moment from "moment/moment";
 
 import "moment/locale/ru"
 
-
-
 const Groups = (props) =>{
 
     const { RangePicker } = DatePicker;
@@ -31,10 +29,9 @@ const Groups = (props) =>{
     const [ student, setStudent] = useState({})
     const [ loadingStudent, setLoadingStudent ] = useState(true)
 
+    const [ absenteeisms, setAbsenteeisms ] = useState([]);
     const [ loadingAbsenteeisms, setLoadingAbsenteeisms ] = useState(true);
     const [ absenteeismsForSelect, setAbsenteeismsForSelect ] = useState([])
-    // const [ absenteeismType, setAbsenteeismType ] = useState([{title: "Все", label: "Все"}, {title: "Лекция", label: "Лекция"}, {title: ""}])
-    const [ absenteeisms, setAbsenteeisms ] = useState([]);
 
     const [ absenteeismsByFilter, setAbsenteeismsByFilter ] = useState([]);
     const [ loadingAbsenteeismsByFilter, setLoadingAbsenteeismsByFilter ] = useState(true);
@@ -175,7 +172,7 @@ const Groups = (props) =>{
                       </Radio.Group>
                       <Form name="filter-form" form={absenteeismsForm} onFinish={onFilterFormSubmit}>
                       { radioValue === 1 ?
-                        <Form.Item name="date-by-day">
+                        <Form.Item name="date-by-day" required>
                             <DatePicker style={{"width": "50%"}}/>
                         </Form.Item>  
                       : null}
@@ -184,7 +181,7 @@ const Groups = (props) =>{
                           <RangePicker onChange={(e) => {console.log(new Date(e[0].$d).getTime())}}/>
                         </Form.Item> 
                       : null}
-                        <Form.Item name="subject">
+                        <Form.Item name="subject" required>
                           <Select showSearch optionFilterProp="children" filterOption={(input, option) =>
                                             (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                                         } options={absenteeismsForSelect} placeholder="Выберите предмет" style={{"width": "80%", "marginTop": "8px"}}/>
@@ -196,12 +193,20 @@ const Groups = (props) =>{
             <div className="student-info-absenteeism-section default-block">
                 <div className="section-badge"> <InfoCircleOutlined /> <span>Информация о пропусках студента по предметам</span></div>
             <div>
-                  {loadingAbsenteeisms ? <Skeleton/> : absenteeisms.map(absenteeism => {
+                  {loadingAbsenteeisms ? <Skeleton/> : absenteeisms.length >= 1 ? absenteeisms.map(absenteeism => {
                     return <div key={absenteeism._id} className="student-info-absenteeism-section-item">
                       <span>{absenteeism._id}</span>
                       <span><span><Tooltip title="Уважительные">{absenteeism.posHoursSum}</Tooltip></span><Tooltip title="Неуважительные"> | <span>{absenteeism.negHoursSum}</span></Tooltip> </span>
                     </div>
-                  })}
+                  })
+                  :
+                  <>
+                    <img className="no-data-img" src="../no-recent-updates.svg"/>
+                    <span className="group-page-description">
+                      Пропусков для данного студента по предметам не найдено.
+                    </span>
+                  </>
+                  }
                 </div>
             </div>
           </div>

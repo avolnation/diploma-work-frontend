@@ -17,10 +17,8 @@
 }
 
 #group-info-students-block-students {
-    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
     gap: 10px;
 }
 
@@ -35,10 +33,10 @@
 .group-info-student-block-item {
     display: flex;
     width: 150px !important;
+    font-size: 15px;
     min-height: 40px;
     background-color: #ececec;
     border-radius: 10px;
-    /* box-shadow: 0px 5px 0px #498467; */
     padding: 1% 1%;
     justify-content: center;
     flex-wrap: wrap;
@@ -52,6 +50,7 @@
 
 .group-info-student-block-item:hover {
     transform: scale(0.95);
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1);
     cursor: pointer;
 }
 
@@ -85,12 +84,8 @@
 }
 
 .online-batch-no-pair {
-    box-shadow: 0px 5px 0px #646262!important;
+    box-shadow: 0px 5px 0px #646262 !important;
 }
-
-/* .online-batch-idle {
-    background-color: ;
-} */
 
 .initials-circle {
     display: inline-block;
@@ -122,9 +117,7 @@
     font-weight: 700;
 }
 
-.pair-line .text {
-
-}
+.pair-line .text {}
 
 .group-info-student-block-item-student-subgroup-batch {
     position: absolute;
@@ -143,15 +136,12 @@
     width: 15%;
     margin: 0 auto;
 }
+
 hr {
     width: 95%;
     border: none;
     border-top: 2px solid #ececec;
 }
-.pair-info-pair-title {
-    /* font-weight: 600; */
-}
-/* online - #498467 offline - #ff3c38 */
 
 .group-info-recent-updates {
     display: flex;
@@ -161,6 +151,7 @@ hr {
     overflow-y: scroll;
     max-height: 540px;
 }
+
 .group-info-recent-updates::-webkit-scrollbar {
     display: none;
 }
@@ -168,7 +159,6 @@ hr {
 .group-recent-updates-item {
     display: flex;
     gap: 8px;
-    /* justify-content: space-between; */
     font-size: 18px;
     padding: 15px 20px;
     background-color: #ececec;
@@ -185,7 +175,6 @@ hr {
     width: 100% !important;
     display: flex;
     gap: 8px;
-    /* justify-content: space-between; */
     font-size: 18px;
     padding: 15px 20px;
     background-color: #ececec;
@@ -202,9 +191,10 @@ hr {
     margin-top: 10px !important;
     display: block;
     margin: 0 auto;
-    width: 50%;
+    width: 45%;
 }
-.group-page-description{
+
+.group-page-description {
     font-size: 16px;
     display: block;
     margin: 0 auto;

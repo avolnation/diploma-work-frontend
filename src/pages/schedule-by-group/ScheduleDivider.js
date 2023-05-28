@@ -50,8 +50,6 @@ const ScheduleDivider = (props) => {
     const [ showEditPairModal, setShowEditPairModal] = useState(false)
     const [ loadingEditPairModal, setLoadingEditPairModal ] = useState(true)
     
-    // const []
-
     const pairTime = ["9:00 - 10:25", "10:40 - 12:05", "12:25 - 13:50", "14:20 - 15:45", "15:55 - 17:20", "17:30 - 18:55"]    
 
     const onContextMenuUse = (weekParity, subgroup, index) => {
@@ -118,7 +116,7 @@ const ScheduleDivider = (props) => {
     
         const data = JSON.stringify(Object.fromEntries(formData))
       
-        fetch(`${API_BASE_URL}schedule/new-schedule`, 
+        fetch(`${API_BASE_URL}schedule/`, 
         {method: 'POST', 
         body: data, headers: {'Content-Type':'application/json'}})
         .then(res => {
@@ -171,7 +169,17 @@ const ScheduleDivider = (props) => {
                 { el.additionalInfo["0 2"] ? 
                     <Dropdown menu={{items: pairMenu, onClick: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(2,0, index)}>
                             <div style={{"minWidth": "70%", "height": "100px"}}>
-                                <div className="schedule-one-button" id="0 2" >{el.additionalInfo["0 2"].subject[0].abbreviature}</div>
+                                <div className="schedule-one-button" id="0 2" >
+                                    <span className="schedule-subject-abbreviature">
+                                        {el.additionalInfo["0 2"].subject[0].abbreviature}
+                                    </span>
+                                    <span className="schedule-subject-lecturer">
+                                    {el.additionalInfo["0 2"].subject[0].lecturer}
+                                    </span>
+                                    <span className="schedule-subject-classroom">
+                                    {el.additionalInfo["0 2"].classroom}
+                                    </span>
+                                </div>
                             </div>
                     </Dropdown>
                     :
@@ -188,7 +196,17 @@ const ScheduleDivider = (props) => {
                     el.additionalInfo["0 1"] 
                     ?
                     <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["0 1"].subject[0]["_id"])}>
-                        <div className="schedule-two-buttons upper-button" id="0 1" >{el.additionalInfo["0 1"].subject[0].abbreviature}</div> 
+                        <div className="schedule-two-buttons upper-button" id="0 1" >
+                            <span className="schedule-subject-abbreviature">
+                                {el.additionalInfo["0 1"].subject[0].abbreviature}
+                            </span>
+                            <span className="schedule-subject-lecturer">
+                                {el.additionalInfo["0 1"].subject[0].lecturer}
+                            </span>
+                            <span className="schedule-subject-classroom">
+                                {el.additionalInfo["0 1"].classroom}
+                            </span> 
+                        </div> 
                     </Dropdown>
                     :
                     <div className="schedule-two-buttons upper-button" id="0 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой</div>
@@ -197,7 +215,17 @@ const ScheduleDivider = (props) => {
                     el.additionalInfo["0 0"] 
                     ?
                     <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["0 0"].subject[0]["_id"])}>
-                        <div className="schedule-two-buttons lower-button" id="0 0" >{el.additionalInfo["0 0"].subject[0].abbreviature}</div> 
+                        <div className="schedule-two-buttons lower-button" id="0 0" >
+                            <span className="schedule-subject-abbreviature">
+                                {el.additionalInfo["0 0"].subject[0].abbreviature}
+                            </span>
+                            <span className="schedule-subject-lecturer">
+                                {el.additionalInfo["0 0"].subject[0].lecturer}
+                            </span>
+                            <span className="schedule-subject-classroom">
+                                {el.additionalInfo["0 0"].classroom}
+                            </span>     
+                        </div> 
                     </Dropdown>
                     :
                     <div className="schedule-two-buttons lower-button" id="0 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой</div>
@@ -208,12 +236,22 @@ const ScheduleDivider = (props) => {
         if(el.pairMode == 2){
             return (
             <div style={{"minWidth": "70%"}}>
-                <div>
+                <div className="schedule-items-row">
                     {
                         el.additionalInfo["1 1"] 
                         ?
                         <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["1 1"].subject[0]["_id"])}>
-                            <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" >{el.additionalInfo["1 1"].subject[0].abbreviature}</div> 
+                            <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" >
+                                <span className="schedule-subject-abbreviature">
+                                    {el.additionalInfo["1 1"].subject[0].abbreviature}
+                                </span>
+                                <span className="schedule-subject-lecturer">
+                                    {el.additionalInfo["1 1"].subject[0].lecturer}
+                                </span>
+                                <span className="schedule-subject-classroom">
+                                    {el.additionalInfo["1 1"].classroom}
+                                </span>    
+                            </div> 
                         </Dropdown>
                         :
                         <div className="schedule-pair-buttons left-up-schedule-pair-button" id="1 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой | Первая подгруппа</div>
@@ -222,18 +260,38 @@ const ScheduleDivider = (props) => {
                         el.additionalInfo["2 1"] 
                         ?
                         <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["2 1"].subject[0]["_id"])}>
-                            <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" >{el.additionalInfo["2 1"].subject[0].abbreviature}</div> 
+                            <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" >
+                                <span className="schedule-subject-abbreviature">
+                                        {el.additionalInfo["2 1"].subject[0].abbreviature}
+                                </span>
+                                <span className="schedule-subject-lecturer">
+                                    {el.additionalInfo["2 1"].subject[0].lecturer}
+                                </span>
+                                <span className="schedule-subject-classroom">
+                                    {el.additionalInfo["2 1"].classroom}
+                                </span>
+                            </div> 
                         </Dropdown>
                         :
                         <div className="schedule-pair-buttons right-up-schedule-pair-button" id="2 1" onClick={(e) => infoToNewPairModal(e, index)}>Над чертой | Вторая подгруппа</div>
                     }
                     </div>
-                    <div>
+                    <div className="schedule-items-row">
                     {
                         el.additionalInfo["1 0"]
                         ?
                         <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["1 0"].subject[0]["_id"])}>
-                            <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" >{el.additionalInfo["1 0"].subject[0].abbreviature}</div> 
+                            <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0">
+                            <span className="schedule-subject-abbreviature">
+                                    {el.additionalInfo["1 0"].subject[0].abbreviature}
+                                </span>
+                                <span className="schedule-subject-lecturer">
+                                    {el.additionalInfo["1 0"].subject[0].lecturer}
+                                </span>
+                                <span className="schedule-subject-classroom">
+                                    {el.additionalInfo["1 0"].classroom}
+                                </span>    
+                            </div> 
                         </Dropdown>
                         :
                         <div className="schedule-pair-buttons left-down-schedule-pair-button" id="1 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой | Первая подгруппа</div>
@@ -242,9 +300,18 @@ const ScheduleDivider = (props) => {
                         el.additionalInfo["2 0"] 
                         ?
                         <Dropdown menu={{items: pairMenu, onContextMenu: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(el.additionalInfo["2 0"].subject[0]["_id"])}>
-                            <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" >{el.additionalInfo["2 0"].subject[0].abbreviature}</div> 
+                            <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" >
+                                <span className="schedule-subject-abbreviature">
+                                    {el.additionalInfo["2 0"].subject[0].abbreviature}
+                                </span>
+                                <span className="schedule-subject-lecturer">
+                                    {el.additionalInfo["2 0"].subject[0].lecturer}
+                                </span>
+                                <span className="schedule-subject-classroom">
+                                    {el.additionalInfo["2 0"].classroom}
+                                </span>
+                            </div> 
                         </Dropdown>
-                        
                         :
                         <div className="schedule-pair-buttons right-down-schedule-pair-button" id="2 0" onClick={(e) => infoToNewPairModal(e, index)}>Под чертой | Вторая подгруппа</div>
                     }
@@ -259,7 +326,7 @@ const ScheduleDivider = (props) => {
             {/* { loadingPairsFromApi ? <span> Loading...</span> : */}
             {
                 subjectsFromRedux.loading ? 
-                <Spin/>
+                <Skeleton/>
                 :
                 props.pairModeByDays.map((el, index) => {
                     return (

@@ -38,10 +38,11 @@ const Cabinet = (props) => {
 
     useEffect(() => {
       if(profile.data.role == "admin"){
+        console.log("Fetched")
         fetchAdminPanelUsers()
       }
-    }, [profile.data])
-
+      userForm.setFieldsValue({"name": profile.data.name, "surname": profile.data.surname})
+    }, [profile.authenticated])
 
     // Проверка пароля
     function checkPassword(e = '') {
@@ -154,6 +155,7 @@ const Cabinet = (props) => {
     .then(response => {
       if(response.status == "success"){
         message.success({content: response.message, duration: 2, style: {marginTop: '5vh',}});
+        props.fetchUserData(props.getCookie('token'));
       }
       else {
         message.error({content: response.message, duration: 2, style: {marginTop: '5vh',}});
@@ -197,7 +199,6 @@ const Cabinet = (props) => {
           setAllUsersLoading(false);
         }
       })
-      userForm.setFieldsValue({"name": profile.data.name, "surname": profile.data.surname})
   }
 
 
@@ -266,7 +267,7 @@ const Cabinet = (props) => {
                        )
                       })
                       : 
-                      allUsers.length > 1 ? filterUsersHandler().map(user => {
+                      allUsers.length >= 1 ? filterUsersHandler().map(user => {
                       return (
                         <div key={user.login} className="cabinet-admin-users-panel-item">
                           <div className="cabinet-admin-users-panel-item-user-info">

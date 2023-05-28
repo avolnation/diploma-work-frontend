@@ -14,7 +14,7 @@ const ScheduleByGroup = (props) =>{
 
     const [ loadingPairModeByDays, setLoadingPairModeByDays ] = useState(true);
 
-    const [ activeTab, setActiveTab] = useState('Понедельник');
+    const [ activeTab, setActiveTab ] = useState('Понедельник');
 
     const daysOfTheWeek =  [{value: 'Понедельник', title: 'Понедельник'}, 
                             {value: 'Вторник', title: 'Вторник'}, 
@@ -34,14 +34,14 @@ const ScheduleByGroup = (props) =>{
     const dispatch = useDispatch();
     const subjectsFromRedux = useSelector(state => state.subjects);
 
-
-    // TODO: Fetch расписания для выбранного дня (activeTab), сохранение в state
     useEffect(() => {
-      // console.log(activeTab);
       fetchScheduleByDayAndGroup(activeTab);
       translatePairModeByDays();
     }, [])
 
+    useEffect(() => {
+      translatePairModeByDays();
+    }, [subjectsFromRedux.subjects[activeTab]])
 
     useEffect(() => {
         apiFetch('get-all-groups');
@@ -49,23 +49,19 @@ const ScheduleByGroup = (props) =>{
     }, [])
 
     useEffect(() => {
-
       if(!(subjectsFromRedux.subjects[activeTab].length >= 1)){
         fetchScheduleByDayAndGroup(activeTab);
-
         setLoadingPairModeByDays(true);
       }
+      else {
+        translatePairModeByDays();
+      }
     }, [activeTab])
-
-    useEffect(() => {
-      translatePairModeByDays();
-      console.log('Changed')
-    }, [subjectsFromRedux.subjects[activeTab]])
 
     const apiFetch = (req) => {
       switch(req){
           case 'get-all-groups': 
-          fetch(API_URL + "/groups/get-all-groups")
+          fetch(API_URL + "/groups")
           .then(result => result.json())
           .then(result => {
               let groupsToSet = result.groups.map(el => {
@@ -88,7 +84,7 @@ const ScheduleByGroup = (props) =>{
                   let subjectsToSet = result.subjects.map(el => {
                       return {
                           value: el._id,
-                          label: `${el.title} (${el.abbreviature})`
+                          label: `${el.title} (${el.abbreviature}|${el.subjectType == "Лекция" ? "ЛК" : el.subjectType == "Практика" ? "ПР" : "ЛАБ"})`
                       }
                   })
                   dispatch(setGroupForSubjects(subjectsToSet))
@@ -104,40 +100,56 @@ const ScheduleByGroup = (props) =>{
       let tempScheduleObject = {};
       let tempPairMode = 0;
       
-      subjectsFromRedux.subjects[activeTab].forEach((el, index) => {
-          tempScheduleObject = {};
-          el.items.forEach(el => {
-              tempScheduleObject[el.subgroup + " " + el.weekParity] = {
-                  "classroom": el.classroom,
-                  "subject": el.subject
-              }
-              if((el.subgroup == 1 || el.subgroup == 2) && (el.weekParity == 0 || el.weekParity == 1)){
-                  tempPairMode = 2;
-              }
-              if((el.subgroup == 0) && (el.weekParity == 1 || el.weekParity == 2)){
-                  tempPairMode = 1;
-              }
-              if(el.subgroup == 0 && el.weekParity == 2){
-                  tempPairMode = 0;
-              }
-          }) 
-          tempPairModeByDays[index].additionalInfo = tempScheduleObject;
-          tempPairModeByDays[index].pairMode = tempPairMode;
-      });
+      if(subjectsFromRedux.subjects[activeTab].length !== 0){
+        subjectsFromRedux.subjects[activeTab].forEach((el, index) => {
+            tempScheduleObject = {};
+            el.items.forEach(el => {
+                tempScheduleObject[el.subgroup + " " + el.weekParity] = {
+                    "classroom": el.classroom,
+                    "subject": el.subject
+                }
+                if((el.subgroup == 1 || el.subgroup == 2) && (el.weekParity == 0 || el.weekParity == 1)){
+                    tempPairMode = 2;
+                }
+                if((el.subgroup == 0) && (el.weekParity == 1 || el.weekParity == 2)){
+                    tempPairMode = 1;
+                }
+                if(el.subgroup == 0 && el.weekParity == 2){
+                    tempPairMode = 0;
+                }
+            }) 
+            tempPairModeByDays[index].additionalInfo = tempScheduleObject;
+            tempPairModeByDays[index].pairMode = tempPairMode;
+        });
 
-      dispatch(setLoadingSubjects(true))
+        dispatch(setLoadingSubjects(true))
 
-      setPairModeByDays([...tempPairModeByDays])
+        setPairModeByDays([...tempPairModeByDays])
+  
+        setLoadingPairModeByDays(false);
+  
+        dispatch(setLoadingSubjects(false))
+      }
+      else {
+        dispatch(setLoadingSubjects(true))
+        setPairModeByDays([{"pairMode": 0, "additionalInfo": {},}, 
+        {"pairMode": 0, "additionalInfo": {},}, 
+        {"pairMode": 0, "additionalInfo": {},}, 
+        {"pairMode": 0, "additionalInfo": {},}, 
+        {"pairMode": 0, "additionalInfo": {},}, 
+        {"pairMode": 0, "additionalInfo": {},},])
 
-      setLoadingPairModeByDays(false);
+        setLoadingPairModeByDays(false);
 
-      dispatch(setLoadingSubjects(false))
+        dispatch(setLoadingSubjects(false))
+      }
   }
 
     const fetchScheduleByDayAndGroup = (day) => {
           const groupId = props.match.params.groupId;
-          dispatch(setLoadingSubjects());
-          dispatch(fetchSubjectsByGroupIdAndDay({groupId, day}));             
+          dispatch(setLoadingSubjects(true));
+          dispatch(fetchSubjectsByGroupIdAndDay({groupId, day}));           
+          dispatch(setLoadingSubjects(false));
     }
 
     const onTabChange = (key) => {
@@ -180,13 +192,46 @@ const ScheduleByGroup = (props) =>{
                   {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId} daysOfTheWeek={daysOfTheWeek}/>}
                 </>
               }, 
-              {key: "Вторник",
+              {
+                key: "Вторник",
                 label: "Вторник",
                 children:
               <>
                   {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
-              </>}
-              ]}
+              </>
+              },
+              {
+                key: "Среда",
+                label: "Среда",
+                children:
+              <>
+                  {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
+              </>
+              },
+              {
+                key: "Четверг",
+                label: "Четверг",
+                children:
+              <>
+                  {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
+              </>
+              },
+              {
+                key: "Пятница",
+                label: "Пятница",
+                children:
+              <>
+                  {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
+              </>
+              },
+              {
+                key: "Суббота",
+                label: "Суббота",
+                children:
+              <>
+                  {loadingPairModeByDays ? <Skeleton active/> : <ScheduleDivider selectedDay={activeTab} pairModeByDays={pairModeByDays} switchPairMode={switchPairMode} groupId={props.match.params.groupId}/>}
+              </>
+              },]}
             />
           </div>
         </div>

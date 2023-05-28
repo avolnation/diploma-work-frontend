@@ -21,21 +21,19 @@
     max-width: fit-content;
 }
 .each-pair-section {
-    /* display: flex; */
     display: inline-block;
-    margin: 2% 0;
-    height: 100px;
-    width: 80%;
+    width: 90%;
 }
 .schedule-one-button {
-    line-height: 50px;
-    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 50%;
     border: 2px solid #c9c9c9;
     border-radius: 10px;
     margin: 1% 1%;
-    padding: 1.5% 1.5%;
-    text-align: center;
-    vertical-align: middle;
+    padding: 10px 5px;
 }
 .schedule-one-button:hover{
     color: #b05500;
@@ -45,7 +43,7 @@
 .schedule-two-buttons {
     border: 2px solid #c9c9c9;
     margin: 1% 1%;
-    padding: 1.5% 1.5%;
+    padding: 10px 5px;
     text-align: center;
 }
 .schedule-two-buttons:hover{
@@ -56,32 +54,61 @@
 .schedule-pair-buttons {
     display: inline-block;
     margin: 1% 1%;
-    padding: 1.5% 1.5%;
+    padding: 5px 10px;
     width: 44%;
     text-align: center;
 }
+.schedule-items-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .left-up-schedule-pair-button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #c9c9c9;
     border-top-left-radius: 10px;
 }
 .right-up-schedule-pair-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #c9c9c9;
     border-top-right-radius: 10px;
 }
 .left-down-schedule-pair-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #c9c9c9;
     border-bottom-left-radius: 10px;
 }
 .right-down-schedule-pair-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #c9c9c9;
     border-bottom-right-radius: 10px;
 }
 .upper-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #c9c9c9;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
 }
 .lower-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #c9c9c9;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -112,4 +139,17 @@
 }
 .pin_block {
     margin: 0 auto;
+}
+.schedule-one-button span {
+    display: block;
+}
+.schedule-subject-abbreviature {
+    font-size: 18px;
+    font-weight: 500;
+}
+.schedule-subject-lecturer {
+    font-size: 12px;
+}
+.schedule-subject-classroom {
+    font-size: 12px;
 }

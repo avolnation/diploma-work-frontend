@@ -74,6 +74,7 @@
   max-height: 250px;
   overflow: auto;
 }
+
 .cabinet-admin-users-panel::-webkit-scrollbar {
   display: none;
 }
@@ -133,19 +134,24 @@
 }
 
 .cabinet-users-admin-panel-skeleton-item-avatar {
+  min-width: 30px !important;
   width: 30px !important;
   height: 30px !important;
+  min-height: 30px !important;
   border-radius: 15px !important;
   margin-right: 8px;
 }
+
 .cabinet-users-admin-panel-skeleton-item-info {
   width: 313px !important;
   height: 22px !important;
 }
+
 .cabinet-users-admin-panel-skeleton-item-button {
   width: 200px !important;
   min-height: 32px;
 }
+
 .cabinet-not-authorized {
   display: flex;
   flex-direction: column;
@@ -153,12 +159,14 @@
   align-items: center;
   width: 100%;
 }
-.cabinet-not-authorized span{
+
+.cabinet-not-authorized span {
   display: block;
   font-size: 40px;
   font-weight: 600;
-  color:#b05500;
+  color: #b05500;
 }
+
 .cabinet-to-main-page {
   display: flex;
   align-items: center;
@@ -170,6 +178,7 @@
   background-color: #b05500;
   border-radius: 5px;
 }
+
 .cabinet-to-main-page:hover {
   opacity: 80%;
 }
