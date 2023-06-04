@@ -30,11 +30,11 @@ const Main = (props) => {
                     <div className="main-page-groups-nav-row">
                         <div className="main-page-groups-nav-info">
                             <div className="main-page-groups-nav-icon">
-                                <TeamOutlined style={{"fontSize": "24px", "color": "#FFF"}}/>
+                                <TeamOutlined/>
                             </div>
                             <div>
-                                <span className="main-page groups-nav title">Список групп </span>
-                                <span className="main-page groups-nav description"> а также их расписание </span>
+                                <span className="main-page-groups-nav-title">Список групп </span>
+                                <span className="main-page-groups-nav-description"> а также их расписание </span>
                             </div>
                         </div>
                         <Link className="main-page-link" to="/groups">К группам <HiChevronRight/></Link>
@@ -42,7 +42,7 @@ const Main = (props) => {
                     <div className="main-page-groups-nav-row">
                         <div className="main-page-groups-nav-info">
                             <div className="main-page-groups-nav-icon">
-                                <UserOutlined style={{"fontSize": "24px", "color": "#FFF"}}/>
+                                <UserOutlined />
                             </div>
                             <div>
                                 <span className="main-page-groups-nav-title">Профиль пользователя </span>
@@ -59,33 +59,33 @@ const Main = (props) => {
                 </div>
                 <div className="main-page-system-parts">
                 <div className="main-page-system-parts-system-part">
-                    <div className="main-page-system-part wrapper">
+                    <div className="main-page-system-part-wrapper">
                         <div className="main-page-groups-nav-icon">
                             <DesktopOutlined style={{"fontSize": "24px", "color": "#FFF"}}/>
                         </div>
-                        <div className="main-page groups-nav part-description">
+                        <div className="main-page-groups-nav-part-description">
                             <span>Клиентская часть</span>
                             <span>отображение данных</span>
                         </div>
                     </div>
                 </div>
                 <div className="main-page-system-parts-system-part">
-                    <div className="main-page-system-part wrapper">
+                    <div className="main-page-system-part-wrapper">
                         <div className="main-page-groups-nav-icon">
                             <DatabaseOutlined style={{"fontSize": "24px", "color": "#FFF"}}/>
                         </div>
-                        <div className="main-page groups-nav part-description">
+                        <div className="main-page-groups-nav-part-description">
                                 <span>Серверная часть</span>
                                 <span>обработка данных</span>    
                         </div>
                     </div>
                 </div>
                 <div className="main-page-system-parts-system-part">
-                    <div className="main-page-system-part wrapper">
+                    <div className="main-page-system-part-wrapper">
                         <div className="main-page-groups-nav-icon">
                             <TagsOutlined style={{"fontSize": "24px", "color": "#FFF"}}/>
                         </div>
-                        <div className="main-page groups-nav part-description">
+                        <div className="main-page-groups-nav-part-description">
                                 <span>Аппаратная часть</span>
                                 <span>внесение данных</span>    
                         </div>

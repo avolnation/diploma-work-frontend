@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { PlusCircleOutlined, InfoCircleOutlined, TeamOutlined } from "@ant-design/icons";
 import { Skeleton, Button, Modal, Form, Input, message } from "antd";
 
-const Groups = (props) =>{
+const Groups = (props) => {
 
   const API_BASE_URL = process.env.REACT_APP_BASE_URL;
 

@@ -8,7 +8,7 @@ import { Popconfirm, Menu, Space, Tag, Icon, Divider, Tooltip, Spin, Button, Mod
 import { setLoadingGroups, fetchGroupsFromApiSucceed, fetchGroupsFromApiFailed } from '../../redux/reducers/groupsSlice';
 
 const ScheduleDivider = (props) => {
-
+    
     const API_BASE_URL = process.env.REACT_APP_BASE_URL;
     const REPLACE_FLAG = true;
 
@@ -34,6 +34,8 @@ const ScheduleDivider = (props) => {
     
     const subjectsFromRedux = useSelector(state => state.subjects);
     const groupsFromRedux = useSelector(state => state.groups)
+    const profile = useSelector(state => state.user);
+
     const dispatch = useDispatch()
 
     const [ loading, setLoading ] = useState(true);
@@ -167,7 +169,7 @@ const ScheduleDivider = (props) => {
             return (
                 <>
                 { el.additionalInfo["0 2"] ? 
-                    <Dropdown menu={{items: pairMenu, onClick: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(2,0, index)}>
+                    <Dropdown menu={{items: pairMenu, style: profile.data.role == "admin" ? null : {"display": "none"}, onClick: (e) => onDropdownUse(e)}} trigger={['contextMenu']} onContextMenu={() => onContextMenuUse(2,0, index)}>
                             <div style={{"minWidth": "70%", "height": "100px"}}>
                                 <div className="schedule-one-button" id="0 2" >
                                     <span className="schedule-subject-abbreviature">
@@ -345,10 +347,10 @@ const ScheduleDivider = (props) => {
                             {
                                 Object.keys(el.additionalInfo).length >= 1 ? 
                                 <Tooltip title="Внимание! При выборе следующего режима и добавлении пары, существующие удалятся">
-                                    <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                                    <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}} style={profile.data.role == "admin" ? null : {"display": "none"}}><ReloadOutlined /></button>
                                 </Tooltip> 
                                 :
-                                <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}}><ReloadOutlined /></button>
+                                <button className="button-next-pair-mode" id={+index + 1} onClick={(e) => {props.switchPairMode(e, index); setReloadPairModes(!reloadPairModes)}} style={profile.data.role == "admin" ? null : {"display": "none"}}><ReloadOutlined /></button>
                             }
                                 {pairModeView(el, index)} 
                             </div>

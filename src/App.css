@@ -6,7 +6,7 @@
   margin: 0 auto;
   padding: 0 20px;
   max-width: 1400px;
-  width: 100%;
+  /* width: 100%; */
 }
 
 #header {
@@ -185,4 +185,21 @@
   height: 44px;
   font-weight: 700;
   transition: .2s all;
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+}
+
+@media (max-width: 480px) {
+  .App {
+    /* max-width: 480px; */
+  }
+  #header .logo svg {
+    width: 100px;
+    height: auto;
+  }
+  #header ul li a {
+    font-size: 14px;
+  }
 }
